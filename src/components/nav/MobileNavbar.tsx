@@ -10,10 +10,10 @@ interface MobileNavbarProps {
 
 export function MobileNavbar({ isOpen, setIsOpen }: MobileNavbarProps) {
   const links = [
-    { name: "Agriculture", href: "#" },
-    { name: "Tech", href: "#" },
-    { name: "Real Estate", href: "#" },
-    { name: "Legacy", href: "#" },
+    { name: "Agriculture", href: "/agriculture" },
+    { name: "Tech", href: "https://billvest.ng" },
+    { name: "Real Estate", href: "real-estate" },
+    { name: "Legacy", href: "legacy" },
     { name: "Investors", href: "#" },
   ];
 

@@ -10,6 +10,7 @@
 //   Variants,
 // } from "framer-motion";
 // import { useRef, useEffect, useState } from "react";
+// import Link from "next/link"; // 1. Import Link
 
 // // --- Configuration Data ---
 // // Edit content here without touching the UI logic
@@ -24,7 +25,7 @@
 
 // const STATS_DATA = [
 //   {
-//     icon: Users, // Pass the component directly
+//     icon: Users,
 //     label: "Customers Served",
 //     value: 1500,
 //     suffix: "+",
@@ -54,6 +55,7 @@
 //       "From strategic real estate to profitable farming, Bugaking Global offers verified plots and expert-managed agricultural investments.",
 //     image: "/farmland.jpg",
 //     button: "View Sector",
+//     href: "/agriculture", // 2. Added href
 //   },
 //   {
 //     title: "Billvest",
@@ -61,6 +63,7 @@
 //       "Simplify your bills with Billvest. Fast, secure, and rewarding payments for airtime, data, utilities, and more.",
 //     image: "/phone.png",
 //     button: "Visit site",
+//     href: "https://billvest.ng", // 2. Added href (can be external)
 //   },
 //   {
 //     title: "Brickgold Homes & Properties",
@@ -68,6 +71,7 @@
 //       "Brickgold Homes develops modern, sustainable, and affordable housing. As part of Bugaking Group, we provide expert property management and investment advisory.",
 //     image: "/landre.jpg",
 //     button: "View Sector",
+//     href: "/real-estate", // 2. Added href
 //   },
 // ];
 
@@ -121,7 +125,7 @@
 //   );
 // };
 
-// // --- Sub-Components (The DRY Fix) ---
+// // --- Sub-Components ---
 
 // const StatCard = ({
 //   item,
@@ -130,7 +134,6 @@
 //   item: (typeof STATS_DATA)[0];
 //   variants: Variants;
 // }) => {
-//   // We capitalize 'Icon' so React knows to render it as a component
 //   const Icon = item.icon;
 
 //   return (
@@ -138,7 +141,6 @@
 //       variants={variants}
 //       className="flex flex-col gap-2 sm:gap-3 rounded-brand p-6 sm:p-8 border border-border bg-surface hover:border-primary/30 transition-colors duration-500"
 //     >
-//       {/* Replaced the <span> with the Icon Component */}
 //       <div className="text-primary mb-1 sm:mb-2">
 //         <Icon className="w-8 h-8 sm:w-10 sm:h-10" strokeWidth={1.5} />
 //       </div>
@@ -150,7 +152,6 @@
 //         {item.isStatic ? (
 //           item.staticLabel
 //         ) : (
-//           // Assuming you have the Counter component defined elsewhere
 //           <Counter value={item.value} suffix={item.suffix} />
 //         )}
 //       </p>
@@ -176,19 +177,26 @@
 //         style={{ backgroundImage: `url("${item.image}")` }}
 //       />
 //     </div>
-//     <div className="space-y-2 sm:space-y-3">
+//     <div className="space-y-2 sm:space-y-3 flex flex-col flex-grow">
 //       <h3 className="text-foreground text-xl sm:text-2xl font-black uppercase tracking-tight">
 //         {item.title}
 //       </h3>
-//       <p className="text-foreground/70 text-sm sm:text-base leading-relaxed">
+//       <p className="text-foreground/70 text-sm sm:text-base leading-relaxed mb-4">
 //         {item.description}
 //       </p>
-//       <button className="flex items-center gap-2 text-primary font-black uppercase tracking-wider sm:tracking-widest text-xs sm:text-sm hover:gap-4 transition-all pt-2">
-//         {item.button}
-//         <span className="material-symbols-outlined text-base sm:text-xl">
-//           <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
-//         </span>
-//       </button>
+
+//       {/* 3. Changed button to Link and used item.href */}
+//       <div className="mt-auto pt-2">
+//         <Link
+//           href={item.href}
+//           className="inline-flex items-center gap-2 text-primary font-black uppercase tracking-wider sm:tracking-widest text-xs sm:text-sm hover:gap-4 transition-all"
+//         >
+//           {item.button}
+//           <span className="material-symbols-outlined text-base sm:text-xl">
+//             <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
+//           </span>
+//         </Link>
+//       </div>
 //     </div>
 //   </motion.div>
 // );
@@ -200,7 +208,6 @@
 //   const yBg = useTransform(scrollY, [0, 500], [0, 150]);
 //   const opacityHero = useTransform(scrollY, [0, 400], [1, 0]);
 
-//   // Added ': Variants' here
 //   const containerVariants: Variants = {
 //     hidden: { opacity: 0 },
 //     visible: {
@@ -209,7 +216,6 @@
 //     },
 //   };
 
-//   // Added ': Variants' here to fix the ease array type inference
 //   const itemVariants: Variants = {
 //     hidden: { opacity: 0, y: 30 },
 //     visible: {
@@ -421,6 +427,12 @@
 //   );
 // }
 
+
+
+
+
+
+
 "use client";
 
 import { ArrowRight, Briefcase, Handshake, Users } from "lucide-react";
@@ -433,10 +445,9 @@ import {
   Variants,
 } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
-import Link from "next/link"; // 1. Import Link
+import Link from "next/link";
 
 // --- Configuration Data ---
-// Edit content here without touching the UI logic
 
 const HERO_DATA = {
   bgImage: "/img1.png",
@@ -478,7 +489,7 @@ const SECTORS_DATA = [
       "From strategic real estate to profitable farming, Bugaking Global offers verified plots and expert-managed agricultural investments.",
     image: "/farmland.jpg",
     button: "View Sector",
-    href: "/agriculture", // 2. Added href
+    href: "/agriculture",
   },
   {
     title: "Billvest",
@@ -486,7 +497,7 @@ const SECTORS_DATA = [
       "Simplify your bills with Billvest. Fast, secure, and rewarding payments for airtime, data, utilities, and more.",
     image: "/phone.png",
     button: "Visit site",
-    href: "https://billvest.ng", // 2. Added href (can be external)
+    href: "https://billvest.ng",
   },
   {
     title: "Brickgold Homes & Properties",
@@ -494,7 +505,7 @@ const SECTORS_DATA = [
       "Brickgold Homes develops modern, sustainable, and affordable housing. As part of Bugaking Group, we provide expert property management and investment advisory.",
     image: "/landre.jpg",
     button: "View Sector",
-    href: "/real-estate", // 2. Added href
+    href: "/real-estate",
   },
 ];
 
@@ -512,8 +523,8 @@ const FadeIn = ({
   <motion.div
     initial={{ opacity: 0, y: 30 }}
     whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, margin: "-50px" }}
-    transition={{ duration: 0.8, delay, ease: [0.21, 0.47, 0.32, 0.98] }}
+    viewport={{ once: true, margin: "-30px" }}
+    transition={{ duration: 0.8, delay, ease: [0.21, 0.47, 0.32, 1.0] }}
     className={className}
   >
     {children}
@@ -528,16 +539,22 @@ const Counter = ({
   suffix?: string;
 }) => {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
-  const springValue = useSpring(0, { stiffness: 50, damping: 20, duration: 2 });
+  // Adjusted margin and amount for better mobile triggering
+  const inView = useInView(ref, { once: true, margin: "-30px", amount: "some" });
+  const springValue = useSpring(0, { stiffness: 40, damping: 20 });
   const [displayValue, setDisplayValue] = useState(0);
 
   useEffect(() => {
-    if (inView) springValue.set(value);
+    if (inView) {
+      springValue.set(value);
+    }
   }, [inView, value, springValue]);
 
   useEffect(() => {
-    springValue.on("change", (latest) => setDisplayValue(Math.floor(latest)));
+    const unsubscribe = springValue.on("change", (latest) => {
+      setDisplayValue(Math.floor(latest));
+    });
+    return () => unsubscribe();
   }, [springValue]);
 
   return (
@@ -608,7 +625,6 @@ const SectorCard = ({
         {item.description}
       </p>
 
-      {/* 3. Changed button to Link and used item.href */}
       <div className="mt-auto pt-2">
         <Link
           href={item.href}
@@ -694,19 +710,14 @@ export function Main() {
               {HERO_DATA.description}
             </motion.p>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1 }}
-              className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center pt-2 sm:pt-4 px-4 sm:px-0"
-            >
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center pt-2 sm:pt-4 px-4 sm:px-0">
               <button className="bg-primary text-charcoal px-8 sm:px-10 py-3 sm:py-4 rounded-brand text-sm sm:text-base font-black uppercase tracking-wider sm:tracking-widest hover:scale-105 transition-transform shadow-[0_0_20px_rgba(208,165,57,0.3)]">
                 Explore Portfolio
               </button>
               <button className="bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 sm:px-10 py-3 sm:py-4 rounded-brand text-sm sm:text-base font-black uppercase tracking-wider sm:tracking-widest hover:bg-white/20 transition-all">
                 Our Mission
               </button>
-            </motion.div>
+            </div>
           </div>
         </motion.div>
       </section>
@@ -716,7 +727,7 @@ export function Main() {
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
+        viewport={{ once: true, margin: "-30px", amount: "some" }}
         className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-12 sm:mb-16"
       >
         {STATS_DATA.map((stat, idx) => (
@@ -745,7 +756,7 @@ export function Main() {
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true, margin: "-50px" }}
+        viewport={{ once: true, margin: "-30px", amount: "some" }}
         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-16 sm:mb-20"
       >
         {SECTORS_DATA.map((sector, index) => (
@@ -759,13 +770,12 @@ export function Main() {
           initial={{ clipPath: "inset(10% 10% 10% 10%)", opacity: 0 }}
           whileInView={{ clipPath: "inset(0% 0% 0% 0%)", opacity: 1 }}
           transition={{ duration: 1.2, ease: [0.21, 0.47, 0.32, 0.98] }}
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, margin: "-30px" }}
           className="bg-[var(--foreground)] rounded-2xl sm:rounded-3xl p-8 sm:p-12 lg:p-20 text-white relative overflow-hidden"
         >
           <div className="absolute top-0 right-0 w-1/2 h-full bg-[var(--primary)]/5 skew-x-12 transform translate-x-1/4" />
 
           <div className="relative z-10 flex flex-col lg:flex-row gap-8 sm:gap-12 items-center">
-            {/* Text Content */}
             <div className="flex-1 space-y-5 sm:space-y-8">
               <FadeIn>
                 <span className="text-primary text-[10px] sm:text-xs font-black uppercase tracking-[0.3em] sm:tracking-[0.5em]">
@@ -813,7 +823,6 @@ export function Main() {
               </motion.div>
             </div>
 
-            {/* Image Circle */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
               whileInView={{ opacity: 1, scale: 1, rotate: 0 }}

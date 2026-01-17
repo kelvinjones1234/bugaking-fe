@@ -3,8 +3,11 @@ import { Footer } from "@/components/Footer";
 import "./globals.css";
 
 export const metadata = {
-  title: "Booga King",
-  description: "Booga King - Agriculture, Technology & Real Estate",
+  title: "BugaKing",
+  description: "BugaKing - Agriculture, Technology & Real Estate",
+  icons: {
+    icon: "/bugakingLogo.png", // Place image in 'public' folder
+  },
 };
 
 export default function RootLayout({

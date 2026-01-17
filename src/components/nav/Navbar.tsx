@@ -6,26 +6,10 @@ import { DesktopNavbar } from "./DesktopNavbar";
 import { MobileNavbar } from "./MobileNavbar";
 import Image from "next/image";
 export function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
-  // Add shadow when scrolling down
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   return (
-    <header
-      className={`sticky top-0 z-50 w-full ${
-        isScrolled
-          ? "bg-white/95"
-          : "bg-transparent border-b border-transparent"
-      }`}
-    >
+    <header className={`sticky top-0 z-[999] bg-white/90 w-full`}>
       <div className="container-width flex items-center justify-between h-20">
         {/* --- LOGO SECTION --- */}
         <div>

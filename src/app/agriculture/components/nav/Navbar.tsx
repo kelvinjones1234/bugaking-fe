@@ -20,13 +20,7 @@ export function Navbar() {
   }, []);
 
   return (
-    <header
-      className={`sticky top-0 z-50 w-full ${
-        isScrolled
-          ? "bg-white/95"
-          : "bg-transparent border-b border-transparent"
-      }`}
-    >
+    <header className={`sticky top-0 z-[999] bg-white/90 w-full`}>
       <div className="container-width flex items-center justify-between h-20">
         {/* --- LEFT SECTION: LOGO --- */}
         <div className="flex items-center gap-6">

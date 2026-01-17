@@ -131,9 +131,6 @@ const OpportunityRow = ({ initials, title, category, yieldVal, tier }: any) => (
     className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5 cursor-pointer transition-colors"
   >
     <div className="flex gap-4 items-center">
-      <div className="size-12 rounded-lg bg-[#d0a539]/20 flex items-center justify-center text-[#d0a539] font-black">
-        {initials}
-      </div>
       <div>
         <p className="font-bold text-white">{title}</p>
         <p className="text-xs text-zinc-500">{category}</p>
@@ -213,14 +210,14 @@ const ListingCard = ({ data }: { data: any }) => {
 const Main = () => {
   return (
     <div className="bg-[#f8f7f6] text-[#171512] transition-colors duration-300 font-sans min-h-screen">
-      <main className="max-w-[1440px] mx-auto overflow-hidden">
+      <main className="">
         {/* Hero Section */}
-        <section className="px-4 md:px-10 py-6">
+        <section className="">
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
-            className="relative overflow-hidden rounded-xl md:rounded-3xl min-h-[70vh] flex items-center justify-center text-center p-8"
+            className="relative overflow-hidden min-h-[70vh] flex items-center justify-center text-center p-8"
           >
             {/* UPDATED: Hero Image with Next.js <Image />.
               'priority' is added so this image loads immediately (improves LCP score).
@@ -249,7 +246,7 @@ const Main = () => {
 
               <FadeIn delay={0.3}>
                 <h1 className="text-5xl md:text-8xl font-black text-white leading-[0.9] tracking-tight">
-                  The Art <br /> of Living
+                  The Art of Living
                 </h1>
               </FadeIn>
 
@@ -275,161 +272,168 @@ const Main = () => {
         </section>
 
         {/* Search & Filter Bar */}
-        <section className="px-4 md:px-20 -mt-12 relative z-30">
-          <FadeIn delay={0.6}>
-            <div className="bg-white rounded-2xl shadow-2xl p-4 border border-black/5">
-              <div className="flex flex-col lg:flex-row gap-4 items-center">
-                <div className="w-full lg:flex-1 relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400">
-                    <Search className="w-6 h-6" />
-                  </span>
-                  <input
-                    className="w-full h-14 pl-12 pr-4 bg-[#f8f7f6] border-none rounded-xl focus:ring-2 focus:ring-[#d0a539]/50 text-base"
-                    placeholder="Search by city, property type, or landmark..."
-                    type="text"
-                  />
-                </div>
-                <div className="flex flex-wrap lg:flex-nowrap items-center gap-3 w-full lg:w-auto">
-                  {FILTERS.map((filter) => (
-                    <FilterButton key={filter.label} {...filter} />
-                  ))}
-                  <button className="w-full lg:w-40 h-14 bg-[#d0a539] text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:brightness-110 transition-all">
-                    Search
-                  </button>
+        <section className="container-width">
+          <section className="-mt-1 relative z-30">
+            <FadeIn delay={0.6}>
+              <div className="bg-white rounded-2xl shadow-2xl p-4 border border-black/5">
+                <div className="flex flex-col lg:flex-row gap-4 items-center">
+                  <div className="w-full lg:flex-1 relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400">
+                      <Search className="w-6 h-6" />
+                    </span>
+                    <input
+                      className="w-full h-14 pl-12 pr-4 bg-[#f8f7f6] border-none rounded-xl focus:ring-2 focus:ring-[#d0a539]/50 text-base"
+                      placeholder="Search by city, property type, or landmark..."
+                      type="text"
+                    />
+                  </div>
+                  <div className="flex flex-wrap lg:flex-nowrap items-center gap-3 w-full lg:w-auto">
+                    {FILTERS.map((filter) => (
+                      <FilterButton key={filter.label} {...filter} />
+                    ))}
+                    <button className="w-full lg:w-40 h-14 bg-[#d0a539] text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:brightness-110 transition-all">
+                      Search
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </FadeIn>
-        </section>
+            </FadeIn>
+          </section>
 
-        {/* Featured Listings Section */}
-        <section className="px-6 md:px-20 py-20">
-          <FadeIn className="flex flex-col md:flex-row items-end justify-between mb-12 gap-6">
-            <div className="space-y-2">
-              <h2 className="text-4xl font-black tracking-tight uppercase">
-                Featured{" "}
-                <span className="text-[#d0a539] font-light">Listings</span>
-              </h2>
-              <p className="text-zinc-500 font-medium">
-                Handpicked global assets with exceptional architectural merit.
-              </p>
-            </div>
-            <Link
-              className="hidden md:flex items-center gap-2 text-[#d0a539] font-bold hover:gap-3 transition-all"
-              href="#"
-            >
-              View All Properties{" "}
-              <ArrowRight className="h-4 w-4 sm:h-6 sm:w-6" />
-            </Link>
-          </FadeIn>
-
-          {/* Responsive Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {LISTINGS.map((listing, index) => (
-              <FadeIn key={listing.id} delay={0.1 * index} className="h-full">
-                <ListingCard data={listing} />
-              </FadeIn>
-            ))}
-          </div>
-
-          <div className="mt-8 md:hidden text-center">
-            <button className="text-[#d0a539] font-bold text-sm uppercase tracking-widest">
-              View All Properties
-            </button>
-          </div>
-        </section>
-
-        {/* Investment Opportunities Section */}
-        <section className="px-4 md:px-10 mb-20">
-          <div className="bg-zinc-900 rounded-[2.5rem] p-8 md:p-20 text-white overflow-hidden relative">
-            <div className="absolute top-0 right-0 w-1/2 h-full opacity-20 pointer-events-none">
-              <svg
-                className="w-full h-full"
-                preserveAspectRatio="none"
-                viewBox="0 0 100 100"
-              >
-                <path d="M0,100 L100,0 L100,100 Z" fill="#d0a539"></path>
-              </svg>
-            </div>
-
-            <div className="relative z-10 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-              <FadeIn className="space-y-8">
-                <span className="text-[#d0a539] font-black uppercase tracking-widest text-sm">
-                  Institutional Assets
-                </span>
-                <h2 className="text-5xl md:text-7xl font-black leading-none">
-                  Global Investment Portal
+          {/* Featured Listings Section */}
+          <section className="md:px-20 py-16">
+            <FadeIn className="flex flex-col md:flex-row items-end justify-between mb-12 gap-6">
+              <div className="space-y-2">
+                <h2 className="text-4xl font-black tracking-tight uppercase">
+                  Featured{" "}
+                  <span className="text-[#d0a539] font-light">Listings</span>
                 </h2>
-                <p className="text-zinc-400 text-lg font-light leading-relaxed max-w-xl">
-                  Access exclusive high-yield commercial developments and
-                  private residential portfolios.
+                <p className="text-zinc-500 font-medium">
+                  Handpicked global assets with exceptional architectural merit.
                 </p>
-                <div className="grid grid-cols-2 gap-8">
-                  <div>
-                    <p className="text-4xl font-black text-[#d0a539]">12.4%</p>
-                    <p className="text-xs font-bold uppercase tracking-wider text-zinc-500">
-                      Average Annual ROI
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-4xl font-black text-[#d0a539]">₦4.2B</p>
-                    <p className="text-xs font-bold uppercase tracking-wider text-zinc-500">
-                      Assets Under Management
-                    </p>
-                  </div>
-                </div>
-                <button className="h-16 px-10 bg-[#d0a539] text-white rounded-xl font-bold text-lg hover:brightness-110 shadow-2xl shadow-[#d0a539]/40 transition-all">
-                  Request Private Access
-                </button>
-              </FadeIn>
-
-              <FadeIn
-                delay={0.2}
-                className="bg-zinc-800/50 backdrop-blur-xl border border-white/10 rounded-3xl p-8 space-y-6"
+              </div>
+              <Link
+                className="hidden md:flex items-center gap-2 text-[#d0a539] font-bold hover:gap-3 transition-all"
+                href="#"
               >
-                <div className="flex items-center justify-between mb-4">
-                  <h4 className="font-bold text-xl uppercase tracking-tight">
-                    Active Opportunities
-                  </h4>
-                  <TrendingUp className="text-[#d0a539] w-6 h-6" />
-                </div>
+                View All Properties{" "}
+                <ArrowRight className="h-4 w-4 sm:h-6 sm:w-6" />
+              </Link>
+            </FadeIn>
 
-                {OPPORTUNITIES.map((opp) => (
-                  <OpportunityRow key={opp.id} {...opp} />
-                ))}
-
-                <div className="pt-4">
-                  <p className="text-xs text-center text-zinc-500 font-medium">
-                    Verified professional investors only. Secure encryption
-                    active.
-                  </p>
-                </div>
-              </FadeIn>
+            {/* Responsive Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {LISTINGS.map((listing, index) => (
+                <FadeIn key={listing.id} delay={0.1 * index} className="h-full">
+                  <ListingCard data={listing} />
+                </FadeIn>
+              ))}
             </div>
-          </div>
-        </section>
 
-        {/* Newsletter / Contact CTA */}
-        <section className="px-6 md:px-20 py-24 border-t border-black/5">
-          <FadeIn className="max-w-4xl mx-auto text-center space-y-10">
-            <h2 className="text-4xl md:text-5xl font-black tracking-tight uppercase">
-              Stay Informed
-            </h2>
-            <p className="text-zinc-500 text-lg">
-              Receive curated property listings and market reports twice a
-              month.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto">
-              <input
-                className="flex-1 h-14 bg-white rounded-xl border-black/10 px-6"
-                placeholder="Email Address"
-                type="email"
-              />
-              <button className="h-14 px-8 bg-zinc-900 text-white rounded-xl font-bold hover:bg-black transition-colors">
-                Subscribe
+            <div className="mt-8 md:hidden text-center">
+              <button className="text-[#d0a539] font-bold text-sm uppercase tracking-widest">
+                View All Properties
               </button>
             </div>
-          </FadeIn>
+          </section>
+
+          {/* Investment Opportunities Section */}
+          <section className="md:px-10 mb-20">
+            <div className="bg-zinc-900 rounded-[2.5rem] p-8 md:p-20 text-white overflow-hidden relative">
+              <div className="absolute top-0 right-0 w-1/2 h-full opacity-20 pointer-events-none">
+                <svg
+                  className="w-full h-full"
+                  preserveAspectRatio="none"
+                  viewBox="0 0 100 100"
+                >
+                  <path d="M0,100 L100,0 L100,100 Z" fill="#d0a539"></path>
+                </svg>
+              </div>
+
+              <div className="relative z-10 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                <FadeIn className="space-y-8">
+                  <span className="text-[#d0a539] font-black uppercase tracking-widest text-sm">
+                    Institutional Assets
+                  </span>
+                  <h2 className="text-5xl md:text-7xl font-black leading-none">
+                    Global Investment Portal
+                  </h2>
+                  <p className="text-zinc-400 text-lg font-light leading-relaxed max-w-xl">
+                    Access exclusive high-yield commercial developments and
+                    private residential portfolios.
+                  </p>
+                  <div className="grid grid-cols-2 gap-8">
+                    <div>
+                      <p className="text-4xl font-black text-[#d0a539]">
+                        12.4%
+                      </p>
+                      <p className="text-xs font-bold uppercase tracking-wider text-zinc-500">
+                        Average Annual ROI
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-4xl font-black text-[#d0a539]">
+                        ₦4.2B
+                      </p>
+                      <p className="text-xs font-bold uppercase tracking-wider text-zinc-500">
+                        Assets Under Management
+                      </p>
+                    </div>
+                  </div>
+                  <button className="h-16 px-10 bg-[#d0a539] text-white rounded-xl font-bold text-lg hover:brightness-110 shadow-2xl shadow-[#d0a539]/40 transition-all">
+                    Request Private Access
+                  </button>
+                </FadeIn>
+
+                <FadeIn
+                  delay={0.2}
+                  className="bg-zinc-800/50 backdrop-blur-xl border border-white/10 rounded-3xl p-6 space-y-6"
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="font-bold text-xl uppercase tracking-tight">
+                      Active Opportunities
+                    </h4>
+                    <TrendingUp className="text-[#d0a539] w-6 h-6" />
+                  </div>
+
+                  {OPPORTUNITIES.map((opp) => (
+                    <OpportunityRow key={opp.id} {...opp} />
+                  ))}
+
+                  <div className="pt-4">
+                    <p className="text-xs text-center text-zinc-500 font-medium">
+                      Verified professional investors only. Secure encryption
+                      active.
+                    </p>
+                  </div>
+                </FadeIn>
+              </div>
+            </div>
+          </section>
+
+          {/* Newsletter / Contact CTA */}
+          <section className="px-6 md:px-20 py-12 border-t border-black/5">
+            <FadeIn className="max-w-4xl mx-auto text-center space-y-10">
+              <h2 className="text-4xl md:text-5xl font-black tracking-tight uppercase">
+                Stay Informed
+              </h2>
+              <p className="text-zinc-500 text-lg">
+                Receive curated property listings and market reports twice a
+                month.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto">
+                <input
+                  // Changed "flex-1" to "w-full sm:flex-1"
+                  className="w-full sm:flex-1 h-14 bg-white rounded-xl border-black/10 px-6"
+                  placeholder="Email Address"
+                  type="email"
+                />
+                <button className="h-14 px-8 bg-zinc-900 text-white rounded-xl font-bold hover:bg-black transition-colors w-full sm:w-auto">
+                  Subscribe
+                </button>
+              </div>
+            </FadeIn>
+          </section>
         </section>
       </main>
     </div>
@@ -437,5 +441,3 @@ const Main = () => {
 };
 
 export default Main;
-
-

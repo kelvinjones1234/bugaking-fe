@@ -31,8 +31,7 @@ const LISTINGS = [
     title: "The Eko Atlantic Penthouse",
     location: "Victoria Island, Lagos",
     price: "₦2.5M", // High-end VI/Eko Atlantic often prices in USD
-    image:
-      "https://images.unsplash.com/photo-1600596542815-60c37c6525fa?q=80&w=2676&auto=format&fit=crop",
+    image: "/realestate.jpeg",
     badge: "New Listing",
     badgeColor: "bg-[#d0a539]",
     type: "residential",
@@ -47,8 +46,7 @@ const LISTINGS = [
     title: "Maitama Heights Plaza",
     location: "Maitama, Abuja",
     price: "₦1.2B", // Using Billion Naira for premium commercial
-    image:
-      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2670&auto=format&fit=crop",
+    image: "/realestate.jpeg",
     badge: "Commercial",
     badgeColor: "bg-zinc-900",
     type: "commercial",
@@ -59,8 +57,7 @@ const LISTINGS = [
     title: "Banana Island Waterfront",
     location: "Ikoyi, Lagos",
     price: "₦5.8M",
-    image:
-      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2670&auto=format&fit=crop",
+    image: "/realestate.jpeg",
     badge: "Off-Market",
     badgeColor: "bg-[#d0a539]",
     type: "residential",
@@ -222,7 +219,7 @@ const Main = () => {
             {/* Layer 1: The Background Image */}
             <div className="absolute inset-0 z-0">
               <img
-                src="https://images.unsplash.com/photo-1613545325278-f24b0cae1224?q=80&w=2670&auto=format&fit=crop"
+                src="/realestate.jpeg"
                 alt="Luxury Estate Background"
                 className="w-full h-full object-cover"
               />

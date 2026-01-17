@@ -355,7 +355,7 @@ const Main = () => {
                   <span className="text-[#d0a539] font-black uppercase tracking-widest text-sm">
                     Institutional Assets
                   </span>
-                  <h2 className="text-5xl md:text-7xl font-black leading-none">
+                  <h2 className="text-4xl md:text-7xl font-black leading-none">
                     Global Investment Portal
                   </h2>
                   <p className="text-zinc-400 text-lg font-light leading-relaxed max-w-xl">

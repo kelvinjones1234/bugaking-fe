@@ -1,12 +1,11 @@
 import React from "react";
-import Image from "next/image";
 
 const Main = () => {
   return (
     <div className="bg-white text-[#171512] font-sans">
       <div className="flex flex-col lg:flex-row h-[91.5vh]">
         {/* Left Side: Hero Image */}
-        <div className="hidden  lg:flex lg:w-1/2 relative overflow-hidden">
+        <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
           <div className="absolute inset-0 z-10 bg-black/40"></div>
           <div
             className="absolute inset-0 z-0 bg-cover bg-center scale-105"
@@ -46,13 +45,15 @@ const Main = () => {
             </div>
 
             <form className="space-y-5">
+              {/* First & Last Name */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <label className="text-xs font-black uppercase tracking-widest text-[#171512]/50">
                     First Name
                   </label>
                   <input
-                    className="block w-full border-gray-200 rounded-lg text-sm focus:border-[#d0a539] focus:ring-[#d0a539] px-4 py-3 bg-gray-50"
+                    className="block w-full border border-gray-200 rounded-lg text-sm px-4 py-3 bg-gray-50
+                               focus:border-[#d0a539] focus:ring-2 focus:ring-[#d0a539] outline-none transition-colors"
                     placeholder="John"
                     type="text"
                   />
@@ -62,42 +63,70 @@ const Main = () => {
                     Last Name
                   </label>
                   <input
-                    className="block w-full border-gray-200 rounded-lg text-sm focus:border-[#d0a539] focus:ring-[#d0a539] px-4 py-3 bg-gray-50"
+                    className="block w-full border border-gray-200 rounded-lg text-sm px-4 py-3 bg-gray-50
+                               focus:border-[#d0a539] focus:ring-2 focus:ring-[#d0a539] outline-none transition-colors"
                     placeholder="Doe"
                     type="text"
                   />
                 </div>
               </div>
 
+              {/* Email */}
               <div className="space-y-1.5">
                 <label className="text-xs font-black uppercase tracking-widest text-[#171512]/50">
                   Email Address
                 </label>
                 <input
-                  className="block w-full border-gray-200 rounded-lg text-sm focus:border-[#d0a539] focus:ring-[#d0a539] px-4 py-3 bg-gray-50"
+                  className="block w-full border border-gray-200 rounded-lg text-sm px-4 py-3 bg-gray-50
+                             focus:border-[#d0a539] focus:ring-2 focus:ring-[#d0a539] outline-none transition-colors"
                   placeholder="j.doe@example.com"
                   type="email"
                 />
               </div>
 
+              {/* Password */}
               <div className="space-y-1.5">
-                <label className="text-xs font-black uppercase tracking-widest text-[#171512]/50">
-                  Password
-                </label>
-                <div className="relative">
-                  <input
-                    className="block w-full border-gray-200 rounded-lg text-sm focus:border-[#d0a539] focus:ring-[#d0a539] px-4 py-3 bg-gray-50"
-                    type="password"
-                    defaultValue="••••••••"
-                  />
-                  <button
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#171512]/40 hover:text-[#d0a539] transition-colors"
-                    type="button"
-                  >
-                    <span className="material-symbols-outlined text-lg">
-                      visibility
-                    </span>
-                  </button>
+                <div>
+                  <label className="text-xs font-black uppercase tracking-widest text-[#171512]/50">
+                    Password
+                  </label>
+                  <div className="relative">
+                    <input
+                      className="block w-full border border-gray-200 rounded-lg text-sm px-4 py-3 bg-gray-50
+                               focus:border-[#d0a539] focus:ring-2 focus:ring-[#d0a539] outline-none transition-colors"
+                      type="password"
+                      defaultValue="••••••••"
+                    />
+                    <button
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#171512]/40 hover:text-[#d0a539] transition-colors"
+                      type="button"
+                    >
+                      <span className="material-symbols-outlined text-lg">
+                        visibility
+                      </span>
+                    </button>
+                  </div>
+                </div>
+                <div className="pt-2">
+                  <label className="pt-[2rem] text-xs font-black uppercase tracking-widest text-[#171512]/50">
+                    Confirm Password
+                  </label>
+                  <div className="relative">
+                    <input
+                      className="block w-full border border-gray-200 rounded-lg text-sm px-4 py-3 bg-gray-50
+                               focus:border-[#d0a539] focus:ring-2 focus:ring-[#d0a539] outline-none transition-colors"
+                      type="password"
+                      defaultValue="••••••••"
+                    />
+                    <button
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#171512]/40 hover:text-[#d0a539] transition-colors"
+                      type="button"
+                    >
+                      <span className="material-symbols-outlined text-lg">
+                        visibility
+                      </span>
+                    </button>
+                  </div>
                 </div>
 
                 {/* Strength Bar */}
@@ -109,9 +138,10 @@ const Main = () => {
                 </p>
               </div>
 
+              {/* Terms Checkbox */}
               <div className="flex items-start gap-3 py-2">
                 <input
-                  className="mt-1 size-4 rounded border-gray-300 text-[#d0a539] focus:ring-[#d0a539]"
+                  className="mt-1 rounded border-gray-300 text-[#d0a539] focus:ring-2 focus:ring-[#d0a539]"
                   id="terms"
                   type="checkbox"
                 />
@@ -137,11 +167,13 @@ const Main = () => {
                 </label>
               </div>
 
+              {/* Submit Button */}
               <button className="w-full bg-[#d0a539] text-[#171512] font-black uppercase tracking-[0.2em] py-4 rounded-lg hover:bg-opacity-90 transition-all shadow-lg shadow-[#d0a539]/20">
                 Create Account
               </button>
             </form>
 
+            {/* Login Link */}
             <p className="text-center text-sm text-[#171512]/60">
               Already have an account?{" "}
               <a

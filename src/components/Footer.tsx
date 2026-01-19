@@ -148,7 +148,7 @@ export function Footer() {
       </div>
 
       <div className="container-width mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between gap-4 text-[10px] uppercase font-bold tracking-[0.2em]">
-        <p>© 2024 BugaKing Group. All Rights Reserved.</p>
+        <p>© 2026 BugaKing Group. All Rights Reserved.</p>
         <div className="flex gap-8">
           <Link href="#" className="hover:text-white">
             Privacy Policy

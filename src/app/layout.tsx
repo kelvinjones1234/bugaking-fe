@@ -20,7 +20,7 @@ export default function RootLayout({
       <body className="text-black">
         {/* You could add a global footer here if needed */}
         {children}
-        <Footer />
+        {/* <Footer /> */}
       </body>
     </html>
   );

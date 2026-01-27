@@ -322,7 +322,7 @@ const Main: React.FC = () => {
             <p className="text-white/60 text-base sm:text-lg max-w-xl mx-auto">
               Join thousands of investors who have already secured their future with Bugaking’s flexible ownership model.
             </p>
-            <button className="bg-[#d0a539] text-[#171512] px-12 py-5 rounded-xl text-base font-black uppercase tracking-widest hover:scale-105 hover:bg-[#e1b74d] transition-all shadow-2xl shadow-[#d0a539]/40 mt-4">
+            <button className="bg-[#d0a539] text-[#171512] px-6 py-5 rounded-xl text-base font-black uppercase tracking-widest hover:scale-105 hover:bg-[#e1b74d] transition-all shadow-2xl shadow-[#d0a539]/40 mt-4">
               About Availability
             </button>
           </div>

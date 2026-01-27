@@ -24,7 +24,7 @@ const PROCESS_STEPS = [
     id: "02",
     title: "Pay",
     description:
-      "Flexible installment plans designed to suit your cash flow and financial goals.",
+      "A straightforward one-time payment, designed to keep your investment journey stress-free and transparent.",
   },
   {
     id: "03",

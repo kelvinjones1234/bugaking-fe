@@ -117,7 +117,7 @@ const MobileSidebar = () => {
 
         <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
           <Link
-            href="/agriculture/dashboard"
+            href="/dashboard"
             className={getLinkClasses("/agriculture/dashboard")}
           >
             <LayoutDashboard size={22} strokeWidth={2} />

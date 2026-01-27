@@ -26,7 +26,7 @@ export const Main = () => {
             Investor Dashboard
           </h2>
           <p className="text-[#171512]/50 text-xs lg:text-sm font-medium">
-            Welcome back, Corporate Partner ID: #BK9902
+            Welcome back!
           </p>
         </div>
         <NotificationComponent

@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import NotificationComponent from "../../components/NotificationComponent";
 import { investmentClient, Investment } from "../../api/portfolioApi";
+import { IMAGE_URL } from "@/utils/axios";
 
 interface DetailProps {
   id: number;
@@ -51,7 +52,6 @@ const InvestmentDetail = ({ id, onBack }: DetailProps) => {
 
   const formatDate = (dateString: string) => {
     if (!dateString) return "N/A";
-    // Parses '2026-02-25' into 'Feb 25, 2026'
     return new Date(dateString).toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",
@@ -59,7 +59,6 @@ const InvestmentDetail = ({ id, onBack }: DetailProps) => {
     });
   };
 
-  // --- 3. Loading State ---
   if (loading) {
     return (
       <main className="flex-1 p-10 bg-[#f8f7f6] min-h-screen pt-24 flex items-center justify-center">
@@ -72,10 +71,9 @@ const InvestmentDetail = ({ id, onBack }: DetailProps) => {
 
   if (!investment) return null;
 
-  // Logic to hide ROI for Agriculture
+  // Check if type is Agriculture
   const isAgric = investment.investment_type === "agriculture";
 
-  // Access nested next payment data safely
   const nextPayment = investment.next_payment_data;
 
   return (
@@ -121,8 +119,7 @@ const InvestmentDetail = ({ id, onBack }: DetailProps) => {
               <img
                 alt={investment.project_name}
                 className="w-full h-full object-cover"
-                // Using the relative path from JSON (ensure your base URL handles this, or prepend logic here)
-                src={`http://127.0.0.1:8000${investment.project_image}`}
+                src={`${IMAGE_URL}${investment.project_image}`}
               />
             </div>
 
@@ -151,11 +148,18 @@ const InvestmentDetail = ({ id, onBack }: DetailProps) => {
                 </div>
               </div>
 
-              {/* Stats Grid - Conditional Layout */}
+              {/* Stats Grid */}
               <div
-                className={`grid gap-4 sm:gap-6 ${isAgric ? "grid-cols-2 md:grid-cols-3" : "grid-cols-2 md:grid-cols-4"}`}
+                className={`grid gap-4 sm:gap-6 ${
+                  isAgric
+                    ? "grid-cols-2 md:grid-cols-4"
+                    : "grid-cols-2 md:grid-cols-3"
+                }`}
               >
-                <div className="p-3 sm:p-0 bg-[#f8f7f6] sm:bg-transparent rounded-xl">
+                {/* CHANGE MADE HERE: 
+                  Added `col-span-2 md:col-span-1` to make Balance full width on mobile 
+                */}
+                <div className="p-3 sm:p-0 bg-[#f8f7f6] sm:bg-transparent rounded-xl col-span-2 md:col-span-1">
                   <p className="text-[9px] sm:text-[10px] text-[#171512]/40 font-black uppercase tracking-widest">
                     Balance
                   </p>
@@ -164,8 +168,8 @@ const InvestmentDetail = ({ id, onBack }: DetailProps) => {
                   </p>
                 </div>
 
-                {/* Hide ROI if Agriculture */}
-                {!isAgric && (
+                {/* SHOW ROI ONLY IF AGRICULTURE */}
+                {isAgric && (
                   <div className="p-3 sm:p-0 bg-[#f8f7f6] sm:bg-transparent rounded-xl">
                     <p className="text-[9px] sm:text-[10px] text-[#171512]/40 font-black uppercase tracking-widest">
                       Expected ROI
@@ -188,7 +192,6 @@ const InvestmentDetail = ({ id, onBack }: DetailProps) => {
                   </p>
                 </div>
 
-                {/* Next Payment Logic */}
                 <div className="p-3 sm:p-0 bg-[#f8f7f6] sm:bg-transparent rounded-xl">
                   <p className="text-[9px] sm:text-[10px] text-[#171512]/40 font-black uppercase tracking-widest">
                     Next Due
@@ -208,10 +211,9 @@ const InvestmentDetail = ({ id, onBack }: DetailProps) => {
             </div>
           </div>
 
-          {/* Bottom Section: Schedule & Vault */}
+          {/* Bottom Section: Schedule & Vault (Unchanged) */}
           <div className="p-5 md:p-8 bg-[#f8f7f6]/30">
             <div className="lg:col-span-2 space-y-8">
-              {/* Payment Schedule Table */}
               <div>
                 <div className="flex items-center gap-3 mb-4 sm:mb-6">
                   <div className="bg-[#d0a539]/10 p-2 rounded-lg text-[#d0a539]">
@@ -280,10 +282,8 @@ const InvestmentDetail = ({ id, onBack }: DetailProps) => {
 
               <div className="h-px bg-[#d0a539]/20 w-full"></div>
 
-              {/* Digital Vault & Support */}
               <div className="mt-8 pt-8 border-t border-[#171512]/5">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-                  {/* Digital Vault (Mock Data for now) */}
                   <div className="lg:col-span-2">
                     <div className="flex items-center gap-3 mb-6">
                       <div className="bg-[#d0a539]/10 p-2 rounded-lg text-[#d0a539]">
@@ -316,7 +316,6 @@ const InvestmentDetail = ({ id, onBack }: DetailProps) => {
                     </div>
                   </div>
 
-                  {/* Support Box */}
                   <div className="bg-[#171512] text-white p-6 sm:p-8 rounded-2xl shadow-xl h-full flex flex-col justify-center relative overflow-hidden group">
                     <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
                       <Headphones className="w-24 h-24" />

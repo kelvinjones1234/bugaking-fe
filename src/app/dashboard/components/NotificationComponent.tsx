@@ -11,7 +11,7 @@ const NotificationComponent = ({
   hasNotifications = true,
 }: NotificationComponentProps) => {
   return (
-    <div className="flex items-center gap-6 w-full md:w-auto justify-end">
+    <div className="flex items-center gap-4 w-full md:w-auto justify-end">
       {/* Notification Bell */}
       <button className="p-2 text-[#171512]/40 hover:text-[#d0a539] transition-colors relative">
         <Bell size={24} strokeWidth={2} />

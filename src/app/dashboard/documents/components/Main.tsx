@@ -417,7 +417,7 @@ const DocumentRow: React.FC<DocumentRowProps> = ({ doc }) => {
   });
 
   return (
-    <div className="group flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 sm:p-5 bg-white border border-[#171512]/5 rounded-xl transition-all hover:shadow-md hover:border-[#d0a539]/30 hover:-translate-y-0.5">
+    <div className="group flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 sm:p-5 bg-white border border-[#171512]/5 rounded-xl transition-all hover:shadow-sm hover:border-[#d0a539]/30 hover:-translate-y-0.5">
       {/* Icon & Info */}
       <div className="flex items-start gap-3 sm:gap-4 flex-1 w-full">
         <div className="bg-[#d0a539]/10 text-[#d0a539] p-2.5 sm:p-3 rounded-lg shrink-0 group-hover:bg-[#d0a539] group-hover:text-white transition-all">
@@ -451,7 +451,7 @@ const DocumentRow: React.FC<DocumentRowProps> = ({ doc }) => {
           rel="noopener noreferrer"
           className="flex-1 sm:flex-none px-4 sm:px-5 py-2 sm:py-2.5 text-xs font-bold uppercase tracking-wider border border-[#d0a539]/30 text-[#d0a539] hover:bg-[#d0a539]/10 rounded-lg transition-all flex items-center justify-center gap-2"
         >
-          <Eye className="w-3.5 h-3.5" />
+          <Eye className="w-3.5 h-3.5 mb-1" />
           <span className="hidden sm:inline">Preview</span>
           <span className="sm:hidden">View</span>
         </a>
@@ -462,7 +462,7 @@ const DocumentRow: React.FC<DocumentRowProps> = ({ doc }) => {
           download
           className="flex-1 sm:flex-none px-4 sm:px-5 py-2 sm:py-2.5 text-xs font-bold uppercase tracking-wider bg-[#d0a539] text-[#171512] hover:bg-[#d0a539]/90 rounded-lg transition-all flex items-center justify-center gap-2 shadow-sm"
         >
-          <Download className="w-3.5 h-3.5" />
+          <Download className="w-3.5 h-3.5 mb-1" />
           <span className="hidden sm:inline">Download</span>
           <span className="sm:hidden">Get</span>
         </a>

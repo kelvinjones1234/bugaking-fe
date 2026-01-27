@@ -246,7 +246,7 @@ export function Main() {
         />
 
         <motion.div
-          style={{ opacity: opacityHero }}
+          style={{ opacity: opacityHero }} 
           className="relative z-10 flex flex-col h-full gap-6 sm:gap-8 items-center justify-center p-6 sm:p-8 lg:p-12 text-center"
         >
           <div className="max-w-4xl space-y-6 sm:space-y-8">
@@ -279,14 +279,14 @@ export function Main() {
               {HERO_DATA.description}
             </motion.p>
 
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center pt-2 sm:pt-4 px-4 sm:px-0">
+            {/* <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center pt-2 sm:pt-4 px-4 sm:px-0">
               <button className="bg-primary text-charcoal px-8 sm:px-10 py-3 sm:py-4 rounded-brand text-sm sm:text-base font-black uppercase tracking-wider sm:tracking-widest hover:scale-105 transition-transform shadow-[0_0_20px_rgba(208,165,57,0.3)]">
                 Explore Portfolio
               </button>
               <button className="bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 sm:px-10 py-3 sm:py-4 rounded-brand text-sm sm:text-base font-black uppercase tracking-wider sm:tracking-widest hover:bg-white/20 transition-all">
                 Our Mission
               </button>
-            </div>
+            </div> */}
           </div>
         </motion.div>
       </section>

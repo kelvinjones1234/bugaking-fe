@@ -7,8 +7,9 @@ import { DesktopNavbar } from "@/components/nav/DesktopNavbar"; // Ensure this p
 import { MobileNavbar } from "@/components/nav/MobileNavbar"; // Ensure this path matches your file structure
 import { useAuth } from "@/context/AuthContext";
 
+import { IMAGE_URL } from "@/utils/axios";
+
 // CHANGE THIS: Your backend URL
-const API_BASE_URL = "http://localhost:8000";
 
 export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -33,7 +34,7 @@ export function Navbar() {
         if (rawPath) {
           const fullPath = rawPath.startsWith("http")
             ? rawPath
-            : `${API_BASE_URL}${rawPath}`;
+            : `${IMAGE_URL}${rawPath}`;
           setProfileImage(fullPath);
         }
       } catch (error) {

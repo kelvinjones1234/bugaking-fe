@@ -1,7 +1,7 @@
 // Agriculture navbar
 
 import { Footer } from "@/components/Footer";
-import { Navbar } from "./components/nav/Navbar";
+import { Navbar } from "@/components/nav/Navbar";
 
 export default function AgricultureLayout({
   children,

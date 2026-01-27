@@ -3,23 +3,26 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { DesktopNavbar } from "./DesktopNavbar";
-import { MobileNavbar } from "./MobileNavbar";
+import { DesktopNavbar } from "@/components/nav/DesktopNavbar"; // Ensure this path matches your file structure
+import { MobileNavbar } from "@/components/nav/MobileNavbar"; // Ensure this path matches your file structure
+import { useAuth } from "@/context/AuthContext";
 
 // CHANGE THIS: Your backend URL
-const API_BASE_URL = "http://localhost:8000"; 
+const API_BASE_URL = "http://localhost:8000";
 
 export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  
+
   // State to hold the full user object
   const [user, setUser] = useState<any | null>(null);
   const [profileImage, setProfileImage] = useState<string | null>(null);
 
+  const { logout } = useAuth();
+
   useEffect(() => {
     // 1. Check Local Storage for User Data
     const storedUser = localStorage.getItem("user");
-    
+
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
@@ -28,8 +31,8 @@ export function Navbar() {
         // 2. Parse Profile Picture if it exists
         const rawPath = parsedUser?.profile?.profile_picture;
         if (rawPath) {
-          const fullPath = rawPath.startsWith("http") 
-            ? rawPath 
+          const fullPath = rawPath.startsWith("http")
+            ? rawPath
             : `${API_BASE_URL}${rawPath}`;
           setProfileImage(fullPath);
         }
@@ -41,37 +44,48 @@ export function Navbar() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-[999] bg-white/90 w-full">
-      <div className="container-width flex items-center justify-between h-20">
-        {/* --- LEFT SECTION --- */}
-        <div className="flex items-center gap-6">
+    <header className="sticky top-0 z-[999] bg-white/90 w-full backdrop-blur-sm border-b border-gray-100">
+      {/* USING CSS GRID:
+         grid-cols-3 creates three equal columns.
+         1. Left Column: Logo
+         2. Center Column: Navigation Links (Perfectly Centered)
+         3. Right Column: User/Auth Buttons
+      */}
+      <div className="container-width grid grid-cols-3 items-center h-20 px-4 md:px-0">
+        {/* --- LEFT SECTION (Logo) --- */}
+        <div className="flex justify-start">
           <Link href="/">
-            <Image src="/bugakingLogo.png" alt="Logo" width={80} height={50} />
+            <Image
+              src="/bugakingLogo.png"
+              alt="Logo"
+              width={80}
+              height={50}
+              className="object-contain"
+            />
           </Link>
-          <DesktopNavbar />
         </div>
 
-        {/* --- RIGHT SECTION --- */}
-        <div className="flex items-center gap-4">
-          
+        {/* --- CENTER SECTION (Nav Links) --- */}
+        {/* Only show DesktopNavbar on medium screens and up */}
+        <div className="flex justify-center">
+          <div className="hidden md:block">
+            <DesktopNavbar />
+          </div>
+        </div>
+
+        {/* --- RIGHT SECTION (Buttons) --- */}
+        <div className="flex items-center justify-end gap-4">
           {/* CONDITIONAL RENDERING START */}
           {user ? (
             // === LOGGED IN STATE ===
             <>
-              {/* 1. Dashboard Button */}
-              <Link href="/dashboard">
-                <button className="hidden sm:flex items-center gap-2 px-4 py-2 text-sm font-bold border-2 border-primary rounded-lg text-primary hover:bg-primary hover:text-[var(--foreground)] transition-all duration-300">
-                  Dashboard
-                </button>
-              </Link>
-
               {/* 2. Profile Image */}
               <Link href="/dashboard">
                 <div className="size-10 rounded-full bg-primary/10 flex items-center justify-center border border-primary/30 text-primary hover:bg-primary hover:text-charcoal transition-colors cursor-pointer overflow-hidden relative">
                   {profileImage ? (
-                    <img 
-                      src={profileImage} 
-                      alt="Profile" 
+                    <img
+                      src={profileImage}
+                      alt="Profile"
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -91,12 +105,21 @@ export function Navbar() {
                   )}
                 </div>
               </Link>
+
+              {/* 1. Dashboard Button */}
+              <Link href="/dashboard">
+                <button
+                  onClick={logout}
+                  className="hidden sm:flex items-center gap-2 px-4 py-2 text-sm font-bold border-2 border-primary rounded-lg text-primary hover:bg-primary hover:text-white transition-all duration-300"
+                >
+                  Logout
+                </button>
+              </Link>
             </>
           ) : (
             // === GUEST STATE (NOT LOGGED IN) ===
-            // Only show Invest Now button
             <Link href="/authentication/signin">
-              <button className="hidden sm:flex items-center gap-2 px-4 py-2 text-sm font-bold border-2 border-primary rounded-lg text-primary hover:bg-primary hover:text-[var(--foreground)] transition-all duration-300">
+              <button className="hidden sm:flex items-center gap-2 px-4 py-2 text-sm font-bold border-2 border-primary rounded-lg text-primary hover:bg-primary hover:text-white transition-all duration-300">
                 Invest Now
               </button>
             </Link>
@@ -104,7 +127,7 @@ export function Navbar() {
           {/* CONDITIONAL RENDERING END */}
 
           {/* Mobile Menu Trigger */}
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center">
             <MobileNavbar
               isOpen={isMobileMenuOpen}
               setIsOpen={setIsMobileMenuOpen}

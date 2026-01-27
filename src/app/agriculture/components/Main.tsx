@@ -163,7 +163,7 @@ export function Main() {
                 href="/offers"
                 className="px-8 py-4 border border-white/40 text-white font-black uppercase tracking-widest rounded-lg hover:bg-white/10 backdrop-blur-md transition-all text-center w-full sm:w-auto min-w-[200px]"
               >
-                View Portfolio
+                Our offer
               </Link>
             </div>
           </FadeIn>

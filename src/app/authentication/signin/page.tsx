@@ -1,21 +1,22 @@
-import { Navbar } from "../component/nav/Navbar";
+"use client";
+
 import Main from "./component/Main";
-import React from "react";
+import { Navbar } from "@/components/nav/Navbar";
 
 const SigninPage = () => {
   return (
-    // 1. h-screen: Fixes height to window size so internal scroll works
-    // 2. flex flex-col: Stacks Navbar and Main vertically
-    // 3. overflow-hidden: Prevents window scrollbars
-    <div className="h-screen flex flex-col overflow-hidden">
-      <div className="flex-none">
+    // h-[100dvh] ensures it fits mobile viewports perfectly (address bar friendly)
+    <div className="h-[100dvh] flex flex-col overflow-hidden bg-white">
+      {/* Navbar Section: Static */}
+      <div className="flex-none z-50">
         <Navbar />
       </div>
-      
-      {/* flex-1: Forces this container to take whatever height is left */}
-      <div className="flex-1 relative">
+
+      {/* Main Section: Fills remaining vertical space */}
+      {/* overflow-hidden passes scroll control down to the inner Main component */}
+      <main className="flex-1 relative w-full h-full overflow-hidden">
         <Main />
-      </div>
+      </main>
     </div>
   );
 };

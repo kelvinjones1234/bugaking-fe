@@ -323,7 +323,7 @@ export function Main() {
                       <div className="w-2.5 h-2.5 rounded-full bg-green-500/60"></div>
                     </div>
                     <div className="bg-[#171512] px-4 sm:px-6 py-1 rounded text-[9px] sm:text-[10px] text-zinc-500 font-mono tracking-wide">
-                      investor.bugaking.com
+                      bugaking.com/dashboard
                     </div>
                     <div className="w-6 sm:w-8"></div>
                   </div>

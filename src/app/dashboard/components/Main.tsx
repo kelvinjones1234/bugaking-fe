@@ -199,14 +199,14 @@ export const Main = () => {
       <section>
         <div className="flex justify-between items-end mb-8">
           <div>
-            <h3 className="text-2xl font-black uppercase tracking-tight">
+            <h3 className="text-lg lg:text-xl font-black uppercase tracking-tight">
               Portfolio Status
             </h3>
             <p className="text-[#171512]/50 text-sm">
               Real-time performance of your active real estate assets
             </p>
           </div>
-          <button className="text-sm font-black text-[#d0a539] flex items-center gap-2 hover:gap-3 transition-all">
+          <button className="text-xs font-black text-[#d0a539] flex items-center gap-2 hover:gap-3 transition-all">
             VIEW FULL <span className="hidden sm:inline">PORTFOLIO</span>{" "}
             <ArrowRight size={18} strokeWidth={3} />
           </button>
@@ -233,7 +233,7 @@ export const Main = () => {
             <div className="p-6">
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <h4 className="text-lg font-black tracking-tight">
+                  <h4 className="text-md font-black tracking-tight">
                     Royal Crest Estate
                   </h4>
                   <p className="text-[10px] text-[#171512]/40 uppercase font-bold tracking-widest">

@@ -190,12 +190,12 @@ const Main = () => {
                   />
                 </div>
 
-                <div className="flex items-start gap-3 py-2">
+                <div className="flex items-center gap-3 py-2">
                   <input
                     required
                     id="terms"
                     type="checkbox"
-                    className="mt-1 rounded border-gray-300 text-[#d0a539] focus:ring-2 focus:ring-[#d0a539]"
+                    className="mb-1 rounded border-gray-300 text-[#d0a539] focus:ring-2 focus:ring-[#d0a539]"
                   />
                   <label
                     className="text-xs leading-relaxed text-[#171512]/60"

@@ -1,30 +1,34 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { DesktopNavbar } from "./DesktopNavbar";
-import { MobileNavbar } from "./MobileNavbar";
+import { useState } from "react";
+import { DesktopNavbar } from "./DesktopNavbar"; // Ensure path exists
+import { MobileNavbar } from "./MobileNavbar";   // Ensure path exists
 import Image from "next/image";
+
 export function Navbar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   return (
-    <header className={`sticky top-0 z-[999] bg-white/90 w-full`}>
-      <div className="container-width flex items-center justify-between h-20">
+    // Removed 'sticky' because the Parent Wrapper fixes this element at the top
+    <header className="bg-white/90 w-full border-b border-gray-100">
+      <div className="container-width flex items-center justify-between h-20 px-4 lg:px-8">
         <div>
-          <Image src="/bugakingLogo.png" alt="Logo" width={80} height={50} />
+          <Image src="/bugakingLogo.png" alt="Logo" width={80} height={50} className="object-contain" />
         </div>
+        
         <div className="hidden lg:block">
           <DesktopNavbar />
         </div>
+        
         <div className="flex items-center gap-6">
-          <button className="bg-primary text-charcoal px-6 py-2 rounded-brand text-sm font-bold uppercase tracking-wider hover:bg-primary/90 transition-all shadow-lg shadow-primary/20">
+          <button className="bg-primary text-charcoal px-6 py-2 rounded-brand text-sm font-bold uppercase tracking-wider hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 whitespace-nowrap">
             Inquire
           </button>
-        </div>
-        {/* --- MOBILE NAVIGATION (Hidden on Desktop) --- */}
-        <div className="lg:hidden">
-          <MobileNavbar isOpen={isMobileOpen} setIsOpen={setIsMobileOpen} />
+          
+          {/* Mobile Toggle would go here if not inside MobileNavbar */}
+          <div className="lg:hidden">
+            <MobileNavbar isOpen={isMobileOpen} setIsOpen={setIsMobileOpen} />
+          </div>
         </div>
       </div>
     </header>

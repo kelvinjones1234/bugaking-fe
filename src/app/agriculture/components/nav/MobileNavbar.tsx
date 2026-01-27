@@ -24,7 +24,7 @@ export function MobileNavbar({ isOpen, setIsOpen }: MobileNavbarProps) {
     } else {
       document.body.style.overflow = "unset";
     }
-  }, [isOpen]);
+  }, [isOpen]); 
 
   return (
     <>

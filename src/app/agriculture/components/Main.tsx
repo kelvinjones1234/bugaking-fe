@@ -10,6 +10,7 @@ import {
   Coins,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 // --- Data Configuration ---
 
@@ -173,7 +174,7 @@ export function Main() {
     <main className="">
       {/* --- Hero Section --- */}
       <section className="mb-8 sm:mb-12">
-        <div className="relative overflow-hidden bg-[var(--foreground)] min-h-[500px] sm:min-h-[600px] flex items-end">
+        <div className="relative overflow-hidden bg-[var(--foreground)] min-h-[500px] sm:min-h-[550px] flex items-end">
           <div className="absolute inset-0 z-0">
             <div className="absolute inset-0 bg-gradient-to-t from-[var(--foreground)] via-[var(--foreground)]/40 to-transparent z-10" />
             <img
@@ -210,11 +211,14 @@ export function Main() {
             <FadeIn delay={0.6}>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
                 <button className="px-8 py-4 bg-primary text-[var(--foreground)] font-bold rounded-xl hover:scale-105 transition-transform w-full sm:w-auto text-center">
-                  Explore Services
+                  Our Offers
                 </button>
-                <button className="px-8 py-4 bg-white/10 backdrop-blur-sm text-white border border-white/20 font-bold rounded-xl hover:bg-white/20 transition-all w-full sm:w-auto text-center">
-                  Our Portfolio
-                </button>
+                <Link
+                  href="/authentication/signin"
+                  className="px-8 py-4 bg-white/10 backdrop-blur-sm text-white border border-white/20 font-bold rounded-xl hover:bg-white/20 transition-all w-full sm:w-auto text-center"
+                >
+                  Get Started
+                </Link>
               </div>
             </FadeIn>
           </div>
@@ -223,7 +227,7 @@ export function Main() {
 
       {/* --- Services Grid --- */}
       <section className="container-width">
-        <section className="px-4 sm:px-6 py-12 sm:py-20">
+        <section className="sm:px-6 py-12 sm:py-20">
           <div className="flex flex-col md:flex-row justify-between items-end mb-8 sm:mb-12 gap-6">
             <FadeIn className="max-w-xl">
               <h2 className="text-[var(--primary)] text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] mb-3 sm:mb-4">
@@ -281,7 +285,7 @@ export function Main() {
         </section>
 
         {/* --- Contact/Inquiry Form --- */}
-        <section className="px-4 sm:px-6 pb-20 sm:pb-24 max-w-4xl mx-auto">
+        <section className="sm:px-6 pb-20 sm:pb-24 max-w-4xl mx-auto">
           <FadeIn className="text-center mb-12 sm:mb-16">
             <h3 className="text-3xl sm:text-4xl font-black tracking-tight mb-4">
               Engage with the Kingdom

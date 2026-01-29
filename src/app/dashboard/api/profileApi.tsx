@@ -98,10 +98,13 @@ export interface UserProfile {
   id: number;
   email: string;
   first_name: string;
-  last_name: string; 
+  last_name: string;
   phone_number: string;
-  is_approved: boolean; // Changed to lowercase 'boolean' (TS standard)
-  profile: ProfileDetails; // ✅ This was the missing link
+  
+  // --- ADD THESE LINES ---
+  profile_picture?: string | null; // Optional string or null
+  address?: string | null;         // Optional string or null
+  is_approved: boolean
 }
 
 // 3. Update payload to match the nested structure for updates if necessary

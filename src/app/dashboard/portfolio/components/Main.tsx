@@ -185,7 +185,7 @@ const Main = ({ onNavigateToDetail, userEmail }: MainProps) => {
           </p>
         </div>
         <NotificationComponent
-          userImage={user?.profile?.profile_picture || "/leadership2.jpg"} // Optional: Use dynamic profile pic too
+          userImage={user?.profile_picture || "/leadership2.jpg"}
           hasNotifications={true}
         />
       </header>

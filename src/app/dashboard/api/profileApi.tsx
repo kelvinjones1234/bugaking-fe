@@ -74,9 +74,6 @@
 
 // export const apiClient = APIClient.getInstance();
 
-
-
-
 import { api } from "@/utils/axios";
 
 // ... [Keep your existing interfaces: ProfileDetails, UserProfile, UpdateProfilePayload] ...
@@ -100,6 +97,13 @@ export interface UserProfile {
 }
 
 // ... [UpdateProfilePayload interface] ...
+export interface UpdateProfilePayload {
+  first_name?: string;
+  last_name?: string;
+  phone_number?: string;
+  address?: string;
+  profile_picture?: File;
+}
 
 class APIClient {
   private static instance: APIClient;
@@ -127,15 +131,25 @@ class APIClient {
     return this.handleResponse<HeaderData>(response);
   }
 
-  async updateProfile(data: any): Promise<UserProfile> {
-    // ... [Keep existing updateProfile logic] ...
+  async updateProfile(data: UpdateProfilePayload): Promise<UserProfile> {
     const formData = new FormData();
-    // (Simulating your existing logic here for brevity)
-    if (data.profile_picture) formData.append("profile_picture", data.profile_picture);
-    
+
+    if (data.first_name) formData.append("first_name", data.first_name);
+    if (data.last_name) formData.append("last_name", data.last_name);
+    if (data.phone_number) formData.append("phone_number", data.phone_number);
+
+    // If your backend expects 'address' inside the nested profile,
+    // you might need to adjust these keys based on your Django Serializer
+    if (data.address) formData.append("address", data.address);
+
+    if (data.profile_picture) {
+      formData.append("profile_picture", data.profile_picture);
+    }
+
     const response = await api.patch("/profile/", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
+
     return this.handleResponse<UserProfile>(response);
   }
 }

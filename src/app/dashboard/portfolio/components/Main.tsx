@@ -3,33 +3,49 @@ import { Headphones, CreditCard } from "lucide-react";
 import NotificationComponent from "../../components/NotificationComponent";
 import { investmentClient, Investment } from "../../api/portfolioApi";
 import { usePaystackPayment } from "react-paystack";
+// 1. Import the useAuth hook
+import { useAuth } from "@/context/AuthContext";
 
-// --- Types ---
 interface MainProps {
   onNavigateToDetail: (id: number) => void;
-  userEmail?: string; // We need the user's email for Paystack
+  // userEmail prop becomes optional/fallback since we have context
+  userEmail?: string;
 }
 
-// --- 1. Internal Payment Button Component ---
-// We extract this to use the usePaystackPayment hook correctly for each item
-const PaymentButton = ({ 
-  amount, 
-  email, 
-  onSuccess, 
+// Inside Main.tsx
+
+// 1. Update the Props Interface (if you have one defined separately) or inline
+const PaymentButton = ({
+  amount,
+  email,
+  investmentId, // <--- ACCEPT THE ID
+  onSuccess,
   onClose,
-  disabled 
-}: { 
-  amount: number; 
-  email: string; 
+  disabled,
+}: {
+  amount: number;
+  email: string;
+  investmentId: number; // <--- DEFINE TYPE
   onSuccess: (reference: any) => void;
   onClose: () => void;
   disabled: boolean;
 }) => {
   const config = {
-    reference: "inv_" + new Date().getTime().toString(),
+    reference: "BKG_" + new Date().getTime().toString(),
     email: email,
-    amount: amount * 100, // Paystack expects amount in Kobo
-    publicKey: "pk_test_3a0f33d0a0fbd53e944055d6d436b904d0aafcc0", // REPLACE WITH YOUR PUBLIC KEY
+    amount: amount * 100,
+    publicKey: "pk_test_3a0f33d0a0fbd53e944055d6d436b904d0aafcc0",
+    // 2. ATTACH METADATA HERE
+    metadata: {
+      investment_id: investmentId, // This is what Django will read
+      custom_fields: [
+        {
+          display_name: "Investment ID",
+          variable_name: "investment_id",
+          value: investmentId.toString(),
+        },
+      ],
+    },
   };
 
   const initializePayment = usePaystackPayment(config);
@@ -43,7 +59,9 @@ const PaymentButton = ({
       disabled={disabled}
       className="w-full bg-[#d0a539] disabled:bg-gray-300 disabled:text-gray-500 text-[#171512] font-black uppercase tracking-widest py-3 rounded-lg text-[10px] hover:bg-[#d0a539]/90 transition-colors flex items-center justify-center gap-2"
     >
-      {disabled ? "Completed" : (
+      {disabled ? (
+        "Completed"
+      ) : (
         <>
           <CreditCard className="w-3 h-3" />
           Make Payment
@@ -53,10 +71,11 @@ const PaymentButton = ({
   );
 };
 
-// --- 2. Skeleton Loading Component ---
+// --- 2. Skeleton Loading Component (Unchanged) ---
 const InvestmentSkeleton = () => {
   return (
     <div className="bg-white rounded-2xl p-4 sm:p-6 flex flex-col xl:flex-row items-stretch gap-6 xl:gap-8 border border-[#171512]/5 animate-pulse">
+      {/* ... skeleton content ... */}
       <div className="w-full xl:w-72 h-40 sm:h-52 bg-gray-200 rounded-xl shrink-0" />
       <div className="flex-1 flex flex-col justify-between py-2">
         <div className="space-y-4">
@@ -97,10 +116,16 @@ const InvestmentSkeleton = () => {
 };
 
 // --- 3. Main Component ---
-const Main = ({ onNavigateToDetail, userEmail = "customer@example.com" }: MainProps) => {
+const Main = ({ onNavigateToDetail, userEmail }: MainProps) => {
+  // 2. Access the user from AuthContext
+  const { user } = useAuth();
+
   const [investments, setInvestments] = useState<Investment[]>([]);
   const [activeFilter, setActiveFilter] = useState<string>("all");
   const [loading, setLoading] = useState(true);
+
+  // 3. Determine the email to use (Context User > Prop > Fallback)
+  const emailToUse = user?.email || userEmail || "customer@example.com";
 
   // --- Fetch Logic ---
   const fetchInvestments = async (category?: string) => {
@@ -123,11 +148,7 @@ const Main = ({ onNavigateToDetail, userEmail = "customer@example.com" }: MainPr
   // --- Payment Callbacks ---
   const handlePaymentSuccess = (reference: any, investmentId: number) => {
     console.log("Payment successful:", reference);
-    // TODO: Call your backend API here to verify transaction and update balance
-    // e.g., await investmentClient.verifyPayment(reference.reference, investmentId);
-    
-    // Refresh data to show new balance
-    fetchInvestments(activeFilter); 
+    fetchInvestments(activeFilter);
     alert("Payment Successful! Your balance will be updated shortly.");
   };
 
@@ -135,17 +156,16 @@ const Main = ({ onNavigateToDetail, userEmail = "customer@example.com" }: MainPr
     console.log("Payment closed");
   };
 
-  // --- Helper: Format Currency ---
+  // --- Helpers ---
   const formatCurrency = (amount: string | number) => {
     const num = typeof amount === "string" ? parseFloat(amount) : amount;
     return new Intl.NumberFormat("en-NG", {
       style: "currency",
       currency: "NGN",
-      maximumFractionDigits: 0, 
+      maximumFractionDigits: 0,
     }).format(num);
   };
 
-  // --- Helper: Format Date ---
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       month: "short",
@@ -155,7 +175,6 @@ const Main = ({ onNavigateToDetail, userEmail = "customer@example.com" }: MainPr
 
   return (
     <main className="flex-1 p-4 md:p-6 lg:p-10 bg-[#f8f7f6] min-h-screen text-[#171512] pt-24 lg:pt-10">
-      {/* --- Header Section --- */}
       <header className="flex justify-between items-start md:items-center mb-10 gap-4">
         <div>
           <h2 className="text-lg lg:text-3xl font-black text-[#171512] tracking-tight uppercase">
@@ -166,12 +185,12 @@ const Main = ({ onNavigateToDetail, userEmail = "customer@example.com" }: MainPr
           </p>
         </div>
         <NotificationComponent
-          userImage="/leadership2.jpg"
+          userImage={user?.profile?.profile_picture || "/leadership2.jpg"} // Optional: Use dynamic profile pic too
           hasNotifications={true}
         />
       </header>
 
-      {/* --- Filters & Summary Section --- */}
+      {/* Filters */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
         <div className="flex flex-wrap gap-3">
           {["all", "real-estate", "agriculture"].map((filter) => (
@@ -201,7 +220,7 @@ const Main = ({ onNavigateToDetail, userEmail = "customer@example.com" }: MainPr
         </div>
       </div>
 
-      {/* --- Investment Cards Grid --- */}
+      {/* Cards Grid */}
       <div className="space-y-6">
         {loading ? (
           <>
@@ -221,7 +240,7 @@ const Main = ({ onNavigateToDetail, userEmail = "customer@example.com" }: MainPr
               onClick={() => onNavigateToDetail(inv.id)}
               className="cursor-pointer bg-white rounded-2xl p-4 sm:p-6 flex flex-col xl:flex-row items-stretch gap-6 xl:gap-8 shadow-sm hover:shadow-md transition-all border border-[#171512]/5 group"
             >
-              {/* 1. Image & Badge */}
+              {/* Image Section */}
               <div className="relative w-full xl:w-72 h-40 sm:h-52 rounded-xl overflow-hidden shrink-0 bg-gray-100">
                 <img
                   alt={inv.project_name}
@@ -234,8 +253,8 @@ const Main = ({ onNavigateToDetail, userEmail = "customer@example.com" }: MainPr
                       inv.status === "completed"
                         ? "bg-green-600"
                         : inv.status === "earning"
-                        ? "bg-[#d0a539]"
-                        : "bg-[#171512]"
+                          ? "bg-[#d0a539]"
+                          : "bg-[#171512]"
                     }`}
                   >
                     {inv.status}
@@ -243,7 +262,7 @@ const Main = ({ onNavigateToDetail, userEmail = "customer@example.com" }: MainPr
                 </div>
               </div>
 
-              {/* 2. Main Details */}
+              {/* Details Section */}
               <div className="flex-1 flex flex-col justify-between h-full w-full">
                 <div className="mb-4">
                   {inv.category_tag && (
@@ -298,11 +317,9 @@ const Main = ({ onNavigateToDetail, userEmail = "customer@example.com" }: MainPr
                 </div>
               </div>
 
-              {/* 3. Action Sidebar (Dynamic) */}
+              {/* Action Sidebar */}
               <div className="w-full xl:w-64 border-t xl:border-t-0 xl:border-l border-[#171512]/5 pt-6 xl:pt-0 xl:pl-8 flex flex-col justify-between gap-6">
-                
                 <div className="grid grid-cols-1 gap-4">
-                  {/* Next Payment Card */}
                   {inv.next_payment_data ? (
                     <div className="bg-[#d0a539]/10 p-3 sm:p-4 rounded-xl border border-[#d0a539]/20">
                       <div className="flex justify-between items-start">
@@ -313,22 +330,21 @@ const Main = ({ onNavigateToDetail, userEmail = "customer@example.com" }: MainPr
                           {formatDate(inv.next_payment_data.due_date)}
                         </p>
                       </div>
-                      
+
                       <p className="text-base sm:text-lg font-black text-[#171512]">
                         {formatCurrency(inv.next_payment_data.amount)}
                       </p>
-                      
+
                       <p className="text-xs sm:text-sm font-bold text-[#d0a539] mt-1">
                         {inv.next_payment_data.title}
                         <span className="block text-[10px] text-[#171512]/50 font-normal normal-case">
-                          {inv.next_payment_data.days_left > 0 
+                          {inv.next_payment_data.days_left > 0
                             ? `${inv.next_payment_data.days_left} Days remaining`
                             : "Due Now"}
                         </span>
                       </p>
                     </div>
                   ) : (
-                    // Completed State
                     <div className="bg-green-50 p-3 sm:p-4 rounded-xl border border-green-200 text-center">
                       <p className="text-xs font-black uppercase text-green-700 tracking-widest">
                         Fully Paid
@@ -336,37 +352,45 @@ const Main = ({ onNavigateToDetail, userEmail = "customer@example.com" }: MainPr
                     </div>
                   )}
 
-                  {/* ROI Display (Only if provided) */}
                   {inv.roi && (
                     <div className="flex flex-row justify-between items-center px-1">
                       <p className="text-[10px] font-black uppercase tracking-widest text-[#171512]/40">
                         ROI
                       </p>
                       <p className="text-base sm:text-lg font-black text-[#171512]">
-                        {inv.roi}% <span className="text-xs text-[#171512]/30">p.a.</span>
+                        {inv.roi}%{" "}
+                        <span className="text-xs text-[#171512]/30">p.a.</span>
                       </p>
                     </div>
                   )}
                 </div>
 
-                {/* Buttons */}
                 <div className="flex flex-col gap-3">
+                  {/* 4. Pass the dynamic email to PaymentButton */}
                   <PaymentButton
-                    amount={inv.next_payment_data ? inv.next_payment_data.amount : 0}
-                    email={userEmail}
+                    amount={
+                      inv.next_payment_data ? inv.next_payment_data.amount : 0
+                    }
+                    email={emailToUse}
+                    investmentId={inv.id} // <--- PASS THE UNIQUE ID FROM BACKEND JSON
                     disabled={inv.balance <= 0}
-                    onSuccess={(reference) => handlePaymentSuccess(reference, inv.id)}
+                    onSuccess={(reference) =>
+                      handlePaymentSuccess(reference, inv.id)
+                    }
                     onClose={handlePaymentClose}
                   />
 
                   <div className="flex gap-2">
-                    <button 
-                      onClick={(e) => { e.stopPropagation(); onNavigateToDetail(inv.id); }}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onNavigateToDetail(inv.id);
+                      }}
                       className="flex-1 bg-[#171512]/5 text-[#171512] text-[10px] font-black uppercase tracking-widest py-3 rounded-lg hover:bg-[#171512]/10 transition-colors"
                     >
                       Details
                     </button>
-                    <button 
+                    <button
                       onClick={(e) => e.stopPropagation()}
                       className="flex-1 bg-[#171512]/5 text-[#171512] text-[10px] font-black uppercase tracking-widest py-3 rounded-lg hover:bg-[#171512]/10 transition-colors"
                     >
@@ -380,7 +404,6 @@ const Main = ({ onNavigateToDetail, userEmail = "customer@example.com" }: MainPr
         )}
       </div>
 
-      {/* --- Support Banner --- */}
       <div className="mt-12 p-6 sm:p-8 border border-[#171512]/5 bg-white rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
         <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
           <Headphones className="w-10 h-10 text-[#d0a539] bg-[#d0a539]/10 p-2 rounded-xl" />

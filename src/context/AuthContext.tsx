@@ -42,6 +42,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const [isInitialized, setIsInitialized] = useState(false);
   const [user, setUser] = useState<UserProfile | null>(null);
 
+  console.log("User data:", user)
   // Refs
   const accessTokenRef = useRef<string | null>(null);
   const isRefreshingRef = useRef(false);

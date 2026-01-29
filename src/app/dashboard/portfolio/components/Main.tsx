@@ -149,7 +149,7 @@ const Main = ({ onNavigateToDetail, userEmail }: MainProps) => {
   const handlePaymentSuccess = (reference: any, investmentId: number) => {
     console.log("Payment successful:", reference);
     fetchInvestments(activeFilter);
-    alert("Payment Successful! Your balance will be updated shortly.");
+    alert("Payment Successful! Your dashboard has been updated");
   };
 
   const handlePaymentClose = () => {

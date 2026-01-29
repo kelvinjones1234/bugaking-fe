@@ -1,28 +1,69 @@
 import React, { useEffect, useState } from "react";
-import { Headphones } from "lucide-react";
+import { Headphones, CreditCard } from "lucide-react";
 import NotificationComponent from "../../components/NotificationComponent";
 import { investmentClient, Investment } from "../../api/portfolioApi";
+import { usePaystackPayment } from "react-paystack";
 
+// --- Types ---
 interface MainProps {
   onNavigateToDetail: (id: number) => void;
+  userEmail?: string; // We need the user's email for Paystack
 }
 
-// --- 1. Skeleton Loading Component ---
+// --- 1. Internal Payment Button Component ---
+// We extract this to use the usePaystackPayment hook correctly for each item
+const PaymentButton = ({ 
+  amount, 
+  email, 
+  onSuccess, 
+  onClose,
+  disabled 
+}: { 
+  amount: number; 
+  email: string; 
+  onSuccess: (reference: any) => void;
+  onClose: () => void;
+  disabled: boolean;
+}) => {
+  const config = {
+    reference: "inv_" + new Date().getTime().toString(),
+    email: email,
+    amount: amount * 100, // Paystack expects amount in Kobo
+    publicKey: "pk_test_3a0f33d0a0fbd53e944055d6d436b904d0aafcc0", // REPLACE WITH YOUR PUBLIC KEY
+  };
+
+  const initializePayment = usePaystackPayment(config);
+
+  return (
+    <button
+      onClick={(e) => {
+        e.stopPropagation();
+        initializePayment({ onSuccess, onClose });
+      }}
+      disabled={disabled}
+      className="w-full bg-[#d0a539] disabled:bg-gray-300 disabled:text-gray-500 text-[#171512] font-black uppercase tracking-widest py-3 rounded-lg text-[10px] hover:bg-[#d0a539]/90 transition-colors flex items-center justify-center gap-2"
+    >
+      {disabled ? "Completed" : (
+        <>
+          <CreditCard className="w-3 h-3" />
+          Make Payment
+        </>
+      )}
+    </button>
+  );
+};
+
+// --- 2. Skeleton Loading Component ---
 const InvestmentSkeleton = () => {
   return (
     <div className="bg-white rounded-2xl p-4 sm:p-6 flex flex-col xl:flex-row items-stretch gap-6 xl:gap-8 border border-[#171512]/5 animate-pulse">
-      {/* Image Skeleton */}
       <div className="w-full xl:w-72 h-40 sm:h-52 bg-gray-200 rounded-xl shrink-0" />
-
-      {/* Details Skeleton */}
       <div className="flex-1 flex flex-col justify-between py-2">
         <div className="space-y-4">
-          <div className="h-3 w-24 bg-gray-200 rounded-full" /> {/* Tag */}
-          <div className="h-8 w-3/4 bg-gray-200 rounded-lg" />  {/* Title */}
-          <div className="h-4 w-1/2 bg-gray-200 rounded" />     {/* Location */}
+          <div className="h-3 w-24 bg-gray-200 rounded-full" />
+          <div className="h-8 w-3/4 bg-gray-200 rounded-lg" />
+          <div className="h-4 w-1/2 bg-gray-200 rounded" />
         </div>
-
-        {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-4 sm:gap-8 my-6">
           <div className="space-y-2">
             <div className="h-3 w-20 bg-gray-200 rounded" />
@@ -33,8 +74,6 @@ const InvestmentSkeleton = () => {
             <div className="h-6 w-32 bg-gray-200 rounded" />
           </div>
         </div>
-
-        {/* Progress Bar */}
         <div className="space-y-2">
           <div className="flex justify-between">
             <div className="h-3 w-20 bg-gray-200 rounded" />
@@ -43,8 +82,6 @@ const InvestmentSkeleton = () => {
           <div className="w-full h-2 sm:h-3 bg-gray-200 rounded-full" />
         </div>
       </div>
-
-      {/* Action Sidebar Skeleton */}
       <div className="w-full xl:w-64 border-t xl:border-t-0 xl:border-l border-[#171512]/5 pt-6 xl:pt-0 xl:pl-8 flex flex-col justify-between gap-6">
         <div className="h-24 bg-gray-200 rounded-xl" />
         <div className="flex flex-col gap-3">
@@ -59,8 +96,8 @@ const InvestmentSkeleton = () => {
   );
 };
 
-// --- 2. Main Component ---
-const Main = ({ onNavigateToDetail }: MainProps) => {
+// --- 3. Main Component ---
+const Main = ({ onNavigateToDetail, userEmail = "customer@example.com" }: MainProps) => {
   const [investments, setInvestments] = useState<Investment[]>([]);
   const [activeFilter, setActiveFilter] = useState<string>("all");
   const [loading, setLoading] = useState(true);
@@ -83,7 +120,22 @@ const Main = ({ onNavigateToDetail }: MainProps) => {
     fetchInvestments(activeFilter);
   }, [activeFilter]);
 
-  // --- Helper: Format Currency (Naira) ---
+  // --- Payment Callbacks ---
+  const handlePaymentSuccess = (reference: any, investmentId: number) => {
+    console.log("Payment successful:", reference);
+    // TODO: Call your backend API here to verify transaction and update balance
+    // e.g., await investmentClient.verifyPayment(reference.reference, investmentId);
+    
+    // Refresh data to show new balance
+    fetchInvestments(activeFilter); 
+    alert("Payment Successful! Your balance will be updated shortly.");
+  };
+
+  const handlePaymentClose = () => {
+    console.log("Payment closed");
+  };
+
+  // --- Helper: Format Currency ---
   const formatCurrency = (amount: string | number) => {
     const num = typeof amount === "string" ? parseFloat(amount) : amount;
     return new Intl.NumberFormat("en-NG", {
@@ -93,7 +145,7 @@ const Main = ({ onNavigateToDetail }: MainProps) => {
     }).format(num);
   };
 
-  // --- Helper: Format Date (e.g., Feb 25) ---
+  // --- Helper: Format Date ---
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
       month: "short",
@@ -284,7 +336,7 @@ const Main = ({ onNavigateToDetail }: MainProps) => {
                     </div>
                   )}
 
-                  {/* ROI Display (Only if provided, e.g. Real Estate) */}
+                  {/* ROI Display (Only if provided) */}
                   {inv.roi && (
                     <div className="flex flex-row justify-between items-center px-1">
                       <p className="text-[10px] font-black uppercase tracking-widest text-[#171512]/40">
@@ -299,16 +351,14 @@ const Main = ({ onNavigateToDetail }: MainProps) => {
 
                 {/* Buttons */}
                 <div className="flex flex-col gap-3">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      // Trigger Payment Logic here
-                    }}
+                  <PaymentButton
+                    amount={inv.next_payment_data ? inv.next_payment_data.amount : 0}
+                    email={userEmail}
                     disabled={inv.balance <= 0}
-                    className="w-full bg-[#d0a539] disabled:bg-gray-300 disabled:text-gray-500 text-[#171512] font-black uppercase tracking-widest py-3 rounded-lg text-[10px] hover:bg-[#d0a539]/90 transition-colors"
-                  >
-                    {inv.balance <= 0 ? "Completed" : "Make Payment"}
-                  </button>
+                    onSuccess={(reference) => handlePaymentSuccess(reference, inv.id)}
+                    onClose={handlePaymentClose}
+                  />
+
                   <div className="flex gap-2">
                     <button 
                       onClick={(e) => { e.stopPropagation(); onNavigateToDetail(inv.id); }}

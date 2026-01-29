@@ -184,10 +184,7 @@ const Main = ({ onNavigateToDetail, userEmail }: MainProps) => {
             Tracking your real estate and agriculture assets
           </p>
         </div>
-        <NotificationComponent
-          userImage={user?.profile_picture || "/leadership2.jpg"}
-          hasNotifications={true}
-        />
+        <NotificationComponent />
       </header>
 
       {/* Filters */}

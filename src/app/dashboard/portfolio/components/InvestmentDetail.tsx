@@ -98,10 +98,7 @@ const InvestmentDetail = ({ id, onBack }: DetailProps) => {
           </div>
         </div>
 
-        <NotificationComponent
-          userImage="/leadership2.jpg"
-          hasNotifications={true}
-        />
+        <NotificationComponent />
       </header>
 
       <div className="space-y-6 md:space-y-8">

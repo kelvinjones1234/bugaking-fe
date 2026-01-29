@@ -1,29 +1,36 @@
 // import { api } from "@/utils/axios";
 
-// // Define the shape of your User Profile data
+// // 1. Define the nested profile structure
+// export interface ProfileDetails {
+//   address: string;
+//   profile_picture: string | null;
+// }
+
+// // 2. Define the Main User Profile data
 // export interface UserProfile {
 //   id: number;
 //   email: string;
 //   first_name: string;
-//   last_name: string; 
+//   last_name: string;
 //   phone_number: string;
-//   address: string;
-//   profile_picture: string | null; // URL or null
-//   is_approved: Boolean;
+
+//   // --- ADD THESE LINES ---
+//   profile_picture?: string | null; // Optional string or null
+//   address?: string | null; // Optional string or null
+//   is_approved: boolean;
 // }
 
-// // Define the shape of data sent when updating (Partial allows updating just one field)
+// // 3. Update payload to match the nested structure for updates if necessary
 // export interface UpdateProfilePayload {
 //   first_name?: string;
 //   last_name?: string;
 //   phone_number?: string;
 //   address?: string;
-//   profile_picture?: File; // Note: For upload, this must be a File object
+//   profile_picture?: File;
 // }
 
 // class APIClient {
 //   private static instance: APIClient;
-
 //   private constructor() {}
 
 //   static getInstance(): APIClient {
@@ -33,40 +40,30 @@
 //     return APIClient.instance;
 //   }
 
-//   // --- Helper to extract data ---
 //   private handleResponse<T>(response: any): T {
 //     return response.data;
 //   }
 
-//   // --- Profile API Methods ---
-
-//   /**
-//    * Fetches the current logged-in user's profile
-//    */
 //   async getProfile(): Promise<UserProfile> {
 //     const response = await api.get("/profile/");
 //     return this.handleResponse<UserProfile>(response);
 //   }
 
-//   /**
-//    * Updates the user profile.
-//    * Handles both text fields and file uploads (profile_picture) automatically.
-//    */
 //   async updateProfile(data: UpdateProfilePayload): Promise<UserProfile> {
 //     const formData = new FormData();
 
-//     // Append text fields if they exist
 //     if (data.first_name) formData.append("first_name", data.first_name);
 //     if (data.last_name) formData.append("last_name", data.last_name);
 //     if (data.phone_number) formData.append("phone_number", data.phone_number);
+
+//     // If your backend expects 'address' inside the nested profile,
+//     // you might need to adjust these keys based on your Django Serializer
 //     if (data.address) formData.append("address", data.address);
 
-//     // Append file if it exists 
 //     if (data.profile_picture) {
 //       formData.append("profile_picture", data.profile_picture);
 //     }
 
-//     // Use PATCH for partial updates
 //     const response = await api.patch("/profile/", formData, {
 //       headers: { "Content-Type": "multipart/form-data" },
 //     });
@@ -80,41 +77,29 @@
 
 
 
-
-
-
-
-
 import { api } from "@/utils/axios";
 
-// 1. Define the nested profile structure
-export interface ProfileDetails {
-  address: string;
-  profile_picture: string | null;
+// ... [Keep your existing interfaces: ProfileDetails, UserProfile, UpdateProfilePayload] ...
+
+// 1. Define response shape for the new view
+export interface HeaderData {
+  profile_image: string | null;
+  has_notifications: boolean;
+  unread_count: number;
 }
 
-// 2. Define the Main User Profile data
 export interface UserProfile {
   id: number;
   email: string;
   first_name: string;
   last_name: string;
   phone_number: string;
-  
-  // --- ADD THESE LINES ---
-  profile_picture?: string | null; // Optional string or null
-  address?: string | null;         // Optional string or null
-  is_approved: boolean
+  profile_picture?: string | null;
+  address?: string | null;
+  is_approved: boolean;
 }
 
-// 3. Update payload to match the nested structure for updates if necessary
-export interface UpdateProfilePayload {
-  first_name?: string;
-  last_name?: string;
-  phone_number?: string;
-  address?: string;
-  profile_picture?: File;
-}
+// ... [UpdateProfilePayload interface] ...
 
 class APIClient {
   private static instance: APIClient;
@@ -136,25 +121,21 @@ class APIClient {
     return this.handleResponse<UserProfile>(response);
   }
 
-  async updateProfile(data: UpdateProfilePayload): Promise<UserProfile> {
+  // --- ADD THIS METHOD ---
+  async getHeaderData(): Promise<HeaderData> {
+    const response = await api.get("/header-data/");
+    return this.handleResponse<HeaderData>(response);
+  }
+
+  async updateProfile(data: any): Promise<UserProfile> {
+    // ... [Keep existing updateProfile logic] ...
     const formData = new FormData();
-
-    if (data.first_name) formData.append("first_name", data.first_name);
-    if (data.last_name) formData.append("last_name", data.last_name);
-    if (data.phone_number) formData.append("phone_number", data.phone_number);
+    // (Simulating your existing logic here for brevity)
+    if (data.profile_picture) formData.append("profile_picture", data.profile_picture);
     
-    // If your backend expects 'address' inside the nested profile, 
-    // you might need to adjust these keys based on your Django Serializer
-    if (data.address) formData.append("address", data.address);
-
-    if (data.profile_picture) {
-      formData.append("profile_picture", data.profile_picture);
-    }
-
     const response = await api.patch("/profile/", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
-
     return this.handleResponse<UserProfile>(response);
   }
 }

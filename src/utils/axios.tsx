@@ -9,8 +9,8 @@ import axios from "axios";
 // Change to "production" to force production URLs locally.
 // Options: "development", "production", null
 
-// const MANUAL_ENV = "development"; 
-const MANUAL_ENV = "production"; 
+const MANUAL_ENV = "development"; 
+// const MANUAL_ENV = "production"; 
  
 // 🟢 STEP 2: Define your URLs here
 const CONFIG = {

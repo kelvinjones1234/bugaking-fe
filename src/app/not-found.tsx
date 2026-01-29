@@ -1,5 +1,6 @@
-"use client"
+"use client";
 
+import { Navbar } from "@/components/nav/Navbar";
 import Link from "next/link";
 
 export default function NotFound() {
@@ -43,61 +44,7 @@ export default function NotFound() {
         }
       `}</style>
 
-      {/* --- HEADER --- */}
-      <header className="sticky top-0 z-50 w-full border-b border-[#171512]/5 bg-white/80 backdrop-blur-md">
-        <div className="max-w-[1280px] mx-auto flex items-center justify-between px-6 py-4 lg:px-10">
-          <div className="flex items-center gap-3">
-            {/* Logo Icon */}
-            <div className="text-[#d0a539] size-8">
-              <svg
-                fill="currentColor"
-                viewBox="0 0 48 48"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4C14.0109 4 16.3957 8.16144 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z"></path>
-              </svg>
-            </div>
-            <h2 className="text-[#171512] text-xl font-black tracking-tighter uppercase font-display">
-              Bugah King
-            </h2>
-          </div>
-
-          <nav className="hidden md:flex flex-1 justify-center gap-10 font-display">
-            <Link
-              href="/agriculture"
-              className="text-sm font-semibold hover:text-[#d0a539] transition-colors uppercase tracking-widest"
-            >
-              Agriculture
-            </Link>
-            <Link
-              href="/technology"
-              className="text-sm font-semibold hover:text-[#d0a539] transition-colors uppercase tracking-widest"
-            >
-              Tech
-            </Link>
-            <Link
-              href="/real-estate"
-              className="text-sm font-semibold hover:text-[#d0a539] transition-colors uppercase tracking-widest"
-            >
-              Real Estate
-            </Link>
-            <Link
-              href="/legacy"
-              className="text-sm font-semibold hover:text-[#d0a539] transition-colors uppercase tracking-widest"
-            >
-              Legacy
-            </Link>
-          </nav>
-
-          <div className="flex items-center gap-6">
-            <Link href="/contact">
-              <button className="hidden sm:flex bg-[#d0a539] text-[#171512] px-6 py-2 rounded-lg text-sm font-bold uppercase tracking-wider hover:bg-opacity-90 transition-all font-display">
-                Inquire
-              </button>
-            </Link>
-          </div>
-        </div>
-      </header>
+      <Navbar />
 
       {/* --- MAIN CONTENT --- */}
       <main className="flex-grow relative flex items-center justify-center overflow-hidden py-20 font-display">
@@ -107,7 +54,7 @@ export default function NotFound() {
         <div className="absolute -bottom-20 -right-20 corner-accent rounded-full pointer-events-none"></div>
 
         <div className="max-w-2xl mx-auto px-6 text-center relative z-10">
-          <h1 className="text-[120px] md:text-[200px] font-serif-brand font-black leading-none gold-metallic-text select-none">
+          <h1 className="text-[120px] md:text-[200px] font-serif-brand font-black leading-none text-[var(--primary)] select-none">
             404
           </h1>
           <div className="space-y-6 -mt-4 md:-mt-8">
@@ -129,7 +76,7 @@ export default function NotFound() {
                 href="/dashboard"
                 className="w-full sm:w-auto bg-white border-2 border-[#d0a539] text-[#d0a539] px-8 py-4 rounded-xl text-sm font-black uppercase tracking-widest hover:bg-[#d0a539] hover:text-[#171512] transition-all"
               >
-                Explore Our Sectors
+                Explore Our Offers
               </Link>
             </div>
           </div>

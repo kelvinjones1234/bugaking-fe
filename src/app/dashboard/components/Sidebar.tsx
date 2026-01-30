@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -9,7 +8,6 @@ import {
   Building2,
   CreditCard,
   FileText,
-  Settings,
   LogOut,
   Tag,
 } from "lucide-react";
@@ -28,7 +26,7 @@ export const Sidebar = () => {
     }
     return pathname?.startsWith(path);
   };
- 
+
   const getLinkClasses = (path: string) => {
     const active = isActive(path);
     return active
@@ -54,10 +52,10 @@ export const Sidebar = () => {
             Dashboard
           </span>
         </Link>
-        
+
         {/* Assuming these pages live under /dashboard/ */}
-        <Link 
-          href="/dashboard/portfolio" 
+        <Link
+          href="/dashboard/portfolio"
           className={getLinkClasses("/dashboard/portfolio")}
         >
           <Building2 size={22} strokeWidth={2} />
@@ -66,8 +64,8 @@ export const Sidebar = () => {
           </span>
         </Link>
 
-        <Link 
-          href="/dashboard/payments" 
+        <Link
+          href="/dashboard/payments"
           className={getLinkClasses("/dashboard/payments")}
         >
           <CreditCard size={22} strokeWidth={2} />
@@ -76,8 +74,8 @@ export const Sidebar = () => {
           </span>
         </Link>
 
-        <Link 
-          href="/dashboard/documents" 
+        <Link
+          href="/dashboard/documents"
           className={getLinkClasses("/dashboard/documents")}
         >
           <FileText size={22} strokeWidth={2} />
@@ -86,10 +84,7 @@ export const Sidebar = () => {
           </span>
         </Link>
 
-        <Link 
-          href="/offers" 
-          className={getLinkClasses("/offers")}
-        >
+        <Link href="/offers" className={getLinkClasses("/offers")}>
           <Tag size={22} strokeWidth={2} />
           <span className="text-sm font-bold uppercase tracking-widest">
             Offers

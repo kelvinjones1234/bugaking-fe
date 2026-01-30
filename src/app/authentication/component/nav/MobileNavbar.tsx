@@ -12,9 +12,9 @@ export function MobileNavbar({ isOpen, setIsOpen }: MobileNavbarProps) {
   const links = [
     { name: "Agriculture", href: "/agriculture" },
     { name: "Tech", href: "https://billvest.ng" },
-    { name: "Real Estate", href: "real-estate" },
-    { name: "Legacy", href: "legacy" },
-    { name: "Investors", href: "#" },
+    { name: "Real Estate", href: "/real-estate" },
+    { name: "Legacy", href: "/legacy" },
+    { name: "Login", href: "/authentication/sign in" },
   ];
 
   // Prevent scrolling when menu is open

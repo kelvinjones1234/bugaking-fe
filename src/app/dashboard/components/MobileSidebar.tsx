@@ -9,7 +9,7 @@ import {
   Building2,
   CreditCard,
   FileText,
-  Settings,
+  Tag,
   X,
   LogOut,
 } from "lucide-react";
@@ -34,9 +34,20 @@ const MobileSidebar = () => {
     }
   }, [isOpen]);
 
+  // --- 1. Added Helper Logic from Desktop Sidebar ---
+  const isActive = (path: string) => {
+    if (path === "/dashboard") {
+      // Strict check for the main dashboard to avoid highlighting it for every /dashboard/... route
+      return pathname === path;
+    }
+    // For other routes, check if the current path starts with the link path
+    // (e.g., /dashboard/portfolio/123 matches /dashboard/portfolio)
+    return pathname?.startsWith(path);
+  };
+
   const getLinkClasses = (path: string) => {
-    const isActive = pathname === path;
-    return isActive
+    const active = isActive(path);
+    return active
       ? "flex items-center gap-4 px-4 py-3 rounded-lg bg-[#d0a539]/10 border-r-4 border-[#d0a539] text-[#d0a539] transition-all"
       : "flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-white/5 text-gray-400 hover:text-[#d0a539] transition-all group";
   };
@@ -59,8 +70,7 @@ const MobileSidebar = () => {
           </span>
         </div>
 
-        {/* --- ANIMATED HAMBURGER BUTTON --- */}
-        {/* Added z-50 so it stays above the backdrop */}
+        {/* Hamburger Button */}
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="relative z-50 p-2 text-white hover:text-[#d0a539] focus:outline-none transition-colors"
@@ -106,7 +116,6 @@ const MobileSidebar = () => {
               Buga<span className="text-[#d0a539]">King</span>
             </h1>
           </div>
-          {/* Optional: Secondary Close Button inside drawer */}
           <button
             onClick={() => setIsOpen(false)}
             className="text-gray-400 hover:text-white"
@@ -116,9 +125,10 @@ const MobileSidebar = () => {
         </div>
 
         <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+          {/* 2. Updated paths in getLinkClasses to match hrefs */}
           <Link
             href="/dashboard"
-            className={getLinkClasses("/agriculture/dashboard")}
+            className={getLinkClasses("/dashboard")}
           >
             <LayoutDashboard size={22} strokeWidth={2} />
             <span className="text-sm font-bold uppercase tracking-widest">
@@ -126,29 +136,38 @@ const MobileSidebar = () => {
             </span>
           </Link>
 
-          <Link href="/dashboard/portfolio" className={getLinkClasses("/portfolio")}>
+          <Link
+            href="/dashboard/portfolio"
+            className={getLinkClasses("/dashboard/portfolio")}
+          >
             <Building2 size={22} strokeWidth={2} />
             <span className="text-sm font-bold uppercase tracking-widest">
               Portfolio
             </span>
           </Link>
 
-          <Link href="/dashboard/payments" className={getLinkClasses("/payments")}>
+          <Link
+            href="/dashboard/payments"
+            className={getLinkClasses("/dashboard/payments")}
+          >
             <CreditCard size={22} strokeWidth={2} />
             <span className="text-sm font-bold uppercase tracking-widest">
               Payments
             </span>
           </Link>
 
-          <Link href="/dashboard/documents" className={getLinkClasses("/documents")}>
+          <Link
+            href="/dashboard/documents"
+            className={getLinkClasses("/dashboard/documents")}
+          >
             <FileText size={22} strokeWidth={2} />
             <span className="text-sm font-bold uppercase tracking-widest">
               Documents
             </span>
           </Link>
 
-          <Link href="/offers" className={getLinkClasses("/settings")}>
-            <Settings size={22} strokeWidth={2} />
+          <Link href="/offers" className={getLinkClasses("/offers")}>
+            <Tag size={22} strokeWidth={2} />
             <span className="text-sm font-bold uppercase tracking-widest">
               Offers
             </span>
@@ -156,7 +175,6 @@ const MobileSidebar = () => {
         </nav>
 
         <div className="p-6 mb-4">
-          {/* 4. Changed button to use logout function */}
           <button
             onClick={logout}
             className="w-full bg-[#d0a539] text-[#171512] font-black uppercase tracking-widest p-4 rounded-xl shadow-lg shadow-[#d0a539]/20 hover:scale-105 active:scale-95 transition-all text-sm flex items-center justify-between gap-2 group"

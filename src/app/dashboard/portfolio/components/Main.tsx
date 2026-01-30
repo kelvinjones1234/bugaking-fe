@@ -755,7 +755,7 @@ const Main = ({ onNavigateToDetail, userEmail }: MainProps) => {
             Tracking your real estate and agriculture assets
           </p>
         </div>
-        <NotificationComponent />
+        {/* <NotificationComponent /> */}
       </header>
 
       {/* Filters */}

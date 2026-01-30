@@ -520,7 +520,7 @@ const InvestmentDetail = ({ id, onBack }: DetailProps) => {
             </p>
           </div>
         </div>
-        <NotificationComponent />
+        {/* <NotificationComponent /> */}
       </header>
 
       <div className="space-y-6 md:space-y-8">
@@ -554,7 +554,7 @@ const InvestmentDetail = ({ id, onBack }: DetailProps) => {
                   <span className="hidden lg:inline-block bg-green-500 text-white text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full mb-3">
                     {investment.status}
                   </span>
-                  <h3 className="text-xl xl:text-2xl font-black text-[#171512] tracking-tighter uppercase leading-tight">
+                  <h3 className="text-md xl:text-xl font-black text-[#171512] tracking-tighter uppercase leading-tight">
                     {investment.project_name}
                   </h3>
                   <p className="flex items-center gap-2 text-[#171512]/40 text-xs sm:text-sm font-bold uppercase tracking-widest mt-2">

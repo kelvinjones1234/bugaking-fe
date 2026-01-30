@@ -359,14 +359,12 @@ import {
   FileText,
   MapPin,
   CalendarClock,
-  CheckCircle2,
   Clock,
   CalendarDays,
   Shield,
   Headphones,
   ArrowLeft,
   AlertCircle,
-  LucideIcon
 } from "lucide-react";
 import NotificationComponent from "../../components/NotificationComponent";
 import { investmentClient, Investment } from "../../api/portfolioApi";
@@ -424,7 +422,7 @@ const ScheduleRow = memo(({ schedule }: { schedule: any }) => (
     <td className="px-6 py-4">
       {schedule.status === "paid" && (
         <span className="px-3 py-1 rounded-full bg-green-100 text-green-700 text-[10px] font-black uppercase tracking-widest flex items-center w-fit gap-1">
-          <CheckCircle2 className="w-3 h-3" /> Paid
+          Paid
         </span>
       )}
       {schedule.status === "pending" && (
@@ -634,45 +632,6 @@ const InvestmentDetail = ({ id, onBack }: DetailProps) => {
                         ))}
                       </tbody>
                     </table>
-                  </div>
-                </div>
-              </div>
-
-              {/* Digital Vault */}
-              <div className="mt-8 pt-8 border-t border-[#171512]/5">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-                  <div className="lg:col-span-2">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="bg-[#d0a539]/10 p-2 rounded-lg text-[#d0a539]">
-                        <Shield className="w-5 h-5" />
-                      </div>
-                      <h4 className="text-base sm:text-lg font-black uppercase tracking-tight">Digital Vault</h4>
-                    </div>
-
-                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                      {["Allocation Letter", "Contract of Sale", "Certificate"].map((doc) => (
-                        <VaultButton key={doc} label={doc} />
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Support Card */}
-                  <div className="bg-[#171512] text-white p-6 sm:p-8 rounded-2xl shadow-xl h-full flex flex-col justify-center relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none">
-                      <Headphones className="w-24 h-24" />
-                    </div>
-                    <div className="relative z-10">
-                      <div className="flex items-center gap-2 mb-4">
-                        <Headphones className="w-5 h-5 text-[#d0a539]" />
-                        <h4 className="text-sm font-black uppercase tracking-widest text-[#d0a539]">Need Support?</h4>
-                      </div>
-                      <p className="text-white/60 text-xs mb-6 leading-relaxed font-medium">
-                        Have questions about your payments? Your dedicated portfolio manager is available.
-                      </p>
-                      <button className="w-full py-3.5 bg-white/10 hover:bg-[#d0a539] hover:text-[#171512] rounded-xl text-[10px] font-black uppercase tracking-widest transition-all">
-                        Contact Manager
-                      </button>
-                    </div>
                   </div>
                 </div>
               </div>

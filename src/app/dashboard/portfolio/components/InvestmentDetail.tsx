@@ -63,7 +63,7 @@ const DetailPaymentButton = memo(
         reference: "BKG_" + new Date().getTime().toString(),
         email: validEmail,
         amount: Math.ceil(amount * 100), // Convert to kobo
-        publicKey: "pk_test_3a0f33d0a0fbd53e944055d6d436b904d0aafcc0",
+        publicKey: "pk_live_c1fb7ac4aad4294f6325d0831b232ff029394d6d",
         metadata: {
           investment_id: investmentId,
           custom_fields: [

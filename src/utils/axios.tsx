@@ -6,8 +6,8 @@ import axios from "axios";
 
 // 🟢 STEP 1: Choose your mode ('development' or 'production')
 // If you leave this as null, it automatically detects based on where it's running.
-// const MANUAL_ENV = "development"; 
-const MANUAL_ENV = "production"; 
+const MANUAL_ENV = "development"; 
+// const MANUAL_ENV = "production"; 
  
 // 🟢 STEP 2: Define your URLs here
 const CONFIG = {

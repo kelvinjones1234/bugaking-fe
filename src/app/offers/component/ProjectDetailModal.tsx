@@ -111,9 +111,9 @@
 //   if (!isOpen || !project) return null;
 
 //   return (
-//     <div 
-//       // CHANGE 1: Added 'pt-20 sm:pt-0' 
-//       // 'pt-20' adds space at the top on mobile (approx 80px for navbar). 
+//     <div
+//       // CHANGE 1: Added 'pt-20 sm:pt-0'
+//       // 'pt-20' adds space at the top on mobile (approx 80px for navbar).
 //       // 'sm:pt-0' removes that padding on desktop since we center it there.
 //       className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center font-display pt-20 sm:pt-0"
 //     >
@@ -124,8 +124,8 @@
 //       />
 
 //       {/* Modal Container */}
-//       <div 
-//         // CHANGE 2: Adjusted max-height 
+//       <div
+//         // CHANGE 2: Adjusted max-height
 //         // Changed 'max-h-[95vh]' to 'max-h-[85vh] sm:max-h-[90vh]'
 //         // This ensures the modal stops growing before it hits the navbar area.
 //         className="bg-white w-full sm:w-[95vw] sm:max-w-5xl sm:rounded-2xl rounded-t-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row relative z-10 animate-in fade-in slide-in-from-bottom sm:zoom-in-95 duration-300 max-h-[85vh] sm:max-h-[90vh]"
@@ -340,12 +340,6 @@
 
 // export default ProjectDetailModal;
 
-
-
-
-
-
-
 "use client";
 
 import React, { useEffect, useState, useMemo, useCallback, memo } from "react";
@@ -419,30 +413,41 @@ const StatusView = memo(({ status }: { status: "loading" | "success" }) => (
 StatusView.displayName = "StatusView";
 
 // B. Project Image Section
-const ProjectImageSection = memo(({ project }: { project: InvestmentProject }) => (
-  <div className="w-full md:w-2/5 h-48 sm:h-56 md:h-auto relative overflow-hidden bg-[#171512] flex-shrink-0 group">
-    {/* Optimization: Next.js Image */}
-    <Image
-      src={project.project_img || "https://via.placeholder.com/400x300"}
+const ProjectImageSection = memo(
+  ({ project }: { project: InvestmentProject }) => (
+    <div className="w-full md:w-2/5 h-48 sm:h-56 md:h-auto relative overflow-hidden bg-[#171512] flex-shrink-0 group">
+      {/* Optimization: Next.js Image */}
+      {/* <Image
+      src={project.project_img || "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop"}
       alt={project.name}
       fill
       className="object-cover transition-transform duration-700 group-hover:scale-105"
       sizes="(max-width: 768px) 100vw, 40vw"
       priority // Load this image immediately
-    />
-    
-    <div className="absolute inset-0 bg-gradient-to-t from-[#171512]/80 to-transparent pointer-events-none"></div>
-    
-    <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 md:bottom-8 md:left-8 z-10">
-      <span className="inline-block bg-[#d0a539]/90 text-[#171512] text-[9px] sm:text-[10px] font-black uppercase tracking-widest px-2.5 py-1 sm:px-3 rounded mb-2 shadow-lg">
-        Verified Listing
-      </span>
-      <p className="text-white text-[10px] sm:text-xs font-bold uppercase tracking-widest opacity-80">
-        Ref: BK-{project.id.toString().padStart(4, "0")}
-      </p>
+    /> */}
+
+      <img
+        src={
+          project.project_img ||
+          "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop"
+        }
+        alt={project.name}
+        className="w-full h-full object-cover"
+      />
+
+      <div className="absolute inset-0 bg-gradient-to-t from-[#171512]/80 to-transparent pointer-events-none"></div>
+
+      <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 md:bottom-8 md:left-8 z-10">
+        <span className="inline-block bg-[#d0a539]/90 text-[#171512] text-[9px] sm:text-[10px] font-black uppercase tracking-widest px-2.5 py-1 sm:px-3 rounded mb-2 shadow-lg">
+          Verified Listing
+        </span>
+        <p className="text-white text-[10px] sm:text-xs font-bold uppercase tracking-widest opacity-80">
+          Ref: BK-{project.id.toString().padStart(4, "0")}
+        </p>
+      </div>
     </div>
-  </div>
-));
+  ),
+);
 ProjectImageSection.displayName = "ProjectImageSection";
 
 // --- Main Component ---
@@ -463,10 +468,12 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
     if (project?.pricing_options?.length) {
       if (initialPlanId) {
         const exists = project.pricing_options.some(
-          (p) => String(p.id) === String(initialPlanId)
+          (p) => String(p.id) === String(initialPlanId),
         );
         setSelectedPlanId(
-          exists ? String(initialPlanId) : String(project.pricing_options[0].id)
+          exists
+            ? String(initialPlanId)
+            : String(project.pricing_options[0].id),
         );
       } else {
         setSelectedPlanId(String(project.pricing_options[0].id));
@@ -485,7 +492,7 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
 
   const currentPlan = useMemo(() => {
     return project?.pricing_options.find(
-      (p) => String(p.id) === selectedPlanId
+      (p) => String(p.id) === selectedPlanId,
     );
   }, [project, selectedPlanId]);
 
@@ -508,14 +515,14 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
       await apiClient.submitInvestment(Number(selectedPlanId));
       setStatus("success");
       localStorage.removeItem("pending_investment");
-      
+
       // Use setTimeout inside the component to avoid memory leaks if unmounted
       const timer = setTimeout(() => {
         setStatus("idle");
         onClose();
         router.push("/dashboard");
       }, 2000);
-      
+
       return () => clearTimeout(timer);
     } catch (error) {
       console.error("Investment failed", error);
@@ -536,7 +543,6 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
 
       {/* Modal Container */}
       <div className="bg-white w-full sm:w-[95vw] sm:max-w-5xl sm:rounded-2xl rounded-t-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row relative z-10 animate-in fade-in slide-in-from-bottom sm:zoom-in-95 duration-300 max-h-[85vh] sm:max-h-[90vh]">
-        
         {/* CLOSE BUTTON */}
         {status === "idle" && (
           <button
@@ -592,7 +598,8 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
                     Brief Analysis
                   </h4>
                   <p className="text-[#171512]/70 leading-relaxed text-xs sm:text-sm lg:text-base max-h-24 sm:max-h-32 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-[#d0a539]/20 scrollbar-track-transparent">
-                    {project.investment_detail || "Premium investment opportunity."}
+                    {project.investment_detail ||
+                      "Premium investment opportunity."}
                   </p>
                 </div>
               </div>
@@ -631,7 +638,9 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
                         Total Commitment
                       </p>
                       <p className="text-base sm:text-lg lg:text-xl font-black text-[#171512]">
-                        {currentPlan ? formatCurrency(currentPlan.total_price) : "---"}
+                        {currentPlan
+                          ? formatCurrency(currentPlan.total_price)
+                          : "---"}
                       </p>
                     </div>
 
@@ -640,7 +649,9 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
                         Min. Deposit
                       </p>
                       <p className="text-base sm:text-lg lg:text-xl font-black text-[#d0a539]">
-                        {currentPlan ? formatCurrency(currentPlan.minimum_deposit) : "---"}
+                        {currentPlan
+                          ? formatCurrency(currentPlan.minimum_deposit)
+                          : "---"}
                       </p>
                     </div>
 
@@ -660,7 +671,9 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
                   <div className="hidden sm:flex items-center gap-2 text-[#171512]/40">
                     <Info className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     <span className="text-[8px] sm:text-[9px] font-bold uppercase tracking-widest">
-                      {isAuthenticated ? "Next step: Invoice Generation" : "Login Required to Invest"}
+                      {isAuthenticated
+                        ? "Next step: Invoice Generation"
+                        : "Login Required to Invest"}
                     </span>
                   </div>
 
@@ -668,7 +681,9 @@ const ProjectDetailModal: React.FC<ProjectDetailModalProps> = ({
                     onClick={handleProceed}
                     className="w-full sm:w-auto bg-[#d0a539] text-[#171512] px-8 sm:px-10 py-3.5 sm:py-4 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] hover:bg-[#d0a539]/90 hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-[#d0a539]/20 flex items-center justify-center gap-2"
                   >
-                    {isAuthenticated ? "Confirm & Proceed" : "Login to Continue"}
+                    {isAuthenticated
+                      ? "Confirm & Proceed"
+                      : "Login to Continue"}
                   </button>
                 </div>
               </div>

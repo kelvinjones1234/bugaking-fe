@@ -45,7 +45,7 @@ export function Navbar() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-[999] bg-white/90 w-full backdrop-blur-sm border-b border-gray-100">
+    <header className="">
       {/* USING CSS GRID:
          grid-cols-3 creates three equal columns.
          1. Left Column: Logo

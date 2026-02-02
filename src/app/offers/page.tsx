@@ -1,6 +1,6 @@
 import React from "react";
 import Main from "./component/Main";
-import { Navbar } from "./component/nav/Navbar";
+import { Navbar } from "./component/nav//Navbar";
 
 import { Footer } from "@/components/Footer";
 const OfferPage = () => {

@@ -2,13 +2,22 @@
 const nextConfig = {
   images: {
     remotePatterns: [
-      // Placeholder images
+      // 1. Placeholder images
       {
         protocol: "https",
         hostname: "placehold.co",
       },
 
-      // Local Django (DEV only)
+      // 2. Cloudinary (Added)
+      // This allows any image served from Cloudinary
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        port: "",
+        pathname: "/**", 
+      },
+
+      // 3. Local Django (Keep for fallback/testing)
       {
         protocol: "http",
         hostname: "localhost",
@@ -16,10 +25,10 @@ const nextConfig = {
         pathname: "/media/**",
       },
 
-      // Production backend (VERY IMPORTANT)
+      // 4. Production backend (Keep for fallback)
       {
         protocol: "https",
-        hostname: "bugaking.pythonanywhere.com", // change this
+        hostname: "bugaking.pythonanywhere.com", 
         pathname: "/media/**",
       },
     ],

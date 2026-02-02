@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useState, memo } from "react";
-import Image from "next/image"; // Optimization
+import React, { useEffect, useState, useMemo, memo } from "react";
+import Image from "next/image"; // Reverted to Next/Image
 import {
   FileText,
   MapPin,
@@ -10,18 +10,22 @@ import {
   CalendarDays,
   ArrowLeft,
   AlertCircle,
+  CreditCard,
+  Loader2,
 } from "lucide-react";
-import { investmentClient, Investment } from "../../api/portfolioApi";
-import { IMAGE_URL } from "@/utils/axios";
+import { usePaystackPayment } from "react-paystack";
+import { useAuth } from "@/context/AuthContext";
+import { investmentClient, Investment } from "@/app/dashboard/api/portfolioApi";
 
 // ==========================================
-// 1. HELPERS (Static)
+// 1. HELPERS
 // ==========================================
 const formatCurrency = (amount: string | number) => {
   const num = typeof amount === "string" ? parseFloat(amount) : amount;
   return new Intl.NumberFormat("en-NG", {
     style: "currency",
     currency: "NGN",
+    maximumFractionDigits: 0,
   }).format(num);
 };
 
@@ -38,49 +42,115 @@ const formatDate = (dateString: string) => {
 // 2. SUB-COMPONENTS (Memoized)
 // ==========================================
 
+// --- Payment Button ---
+interface PaymentButtonProps {
+  amount: number;
+  email: string;
+  investmentId: number;
+  onSuccess: (reference: any) => void;
+  disabled: boolean;
+}
+
+const DetailPaymentButton = memo(
+  ({ amount, email, investmentId, onSuccess, disabled }: PaymentButtonProps) => {
+    const config = useMemo(
+      () => ({
+        reference: "BKG_" + new Date().getTime().toString(),
+        email: email,
+        amount: Math.ceil(amount * 100),
+        publicKey: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || "",
+        metadata: {
+          investment_id: investmentId,
+          custom_fields: [
+            {
+              display_name: "Investment ID",
+              variable_name: "investment_id",
+              value: investmentId.toString(),
+            },
+          ],
+        },
+      }),
+      [amount, email, investmentId]
+    );
+
+    const initializePayment = usePaystackPayment(config);
+
+    if (disabled || amount <= 0) return null;
+
+    return (
+      <button
+        onClick={() => initializePayment({ onSuccess, onClose: () => {} })}
+        className="w-full sm:w-auto px-6 py-3 bg-[#d0a539] text-[#171512] font-black uppercase tracking-widest text-[10px] rounded-lg hover:bg-[#d0a539]/90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#d0a539]/20"
+      >
+        <CreditCard className="w-4 h-4" />
+        Pay Next Installment
+      </button>
+    );
+  }
+);
+DetailPaymentButton.displayName = "DetailPaymentButton";
+
 // --- Stat Card ---
-const StatCard = memo(({ label, value, subText, highlightColor, isFullWidth }: { 
-  label: string, 
-  value: string | number, 
-  subText?: React.ReactNode, 
-  highlightColor?: string,
-  isFullWidth?: boolean 
-}) => (
-  <div className={`p-3 sm:p-0 bg-[#f8f7f6] sm:bg-transparent rounded-xl ${isFullWidth ? "col-span-2 md:col-span-1" : ""}`}>
-    <p className="text-[9px] sm:text-[10px] text-[#171512]/40 font-black uppercase tracking-widest">
-      {label}
-    </p>
-    <p className={`text-base sm:text-lg font-black ${highlightColor || "text-[#171512]"}`}>
-      {value} {subText}
-    </p>
-  </div>
-));
+const StatCard = memo(
+  ({
+    label,
+    value,
+    subText,
+    highlightColor,
+    isFullWidth,
+  }: {
+    label: string;
+    value: string | number;
+    subText?: React.ReactNode;
+    highlightColor?: string;
+    isFullWidth?: boolean;
+  }) => (
+    <div
+      className={`p-4 bg-[#f8f7f6] rounded-xl border border-[#171512]/5 ${
+        isFullWidth ? "col-span-2 md:col-span-1" : ""
+      }`}
+    >
+      <p className="text-[10px] text-[#171512]/40 font-black uppercase tracking-widest mb-1">
+        {label}
+      </p>
+      <p className={`text-lg font-black ${highlightColor || "text-[#171512]"}`}>
+        {value} {subText}
+      </p>
+    </div>
+  )
+);
 StatCard.displayName = "StatCard";
 
 // --- Schedule Table Row ---
 const ScheduleRow = memo(({ schedule }: { schedule: any }) => (
-  <tr className="hover:bg-[#d0a539]/5 transition-colors">
-    <td className="px-6 py-4 text-xs sm:text-sm font-bold">{schedule.title}</td>
-    <td className="px-6 py-4 text-xs sm:text-sm text-[#171512]/60">{schedule.formatted_date}</td>
-    <td className="px-6 py-4 text-xs sm:text-sm font-black">{formatCurrency(schedule.amount)}</td>
-    <td className="px-6 py-4">
+  <tr className="hover:bg-[#d0a539]/5 transition-colors group">
+    <td className="px-6 py-5 text-sm font-bold text-[#171512]">
+      {schedule.title}
+    </td>
+    <td className="px-6 py-5 text-sm text-[#171512]/60 font-medium">
+      {schedule.formatted_date || formatDate(schedule.due_date)}
+    </td>
+    <td className="px-6 py-5 text-sm font-black text-[#171512]">
+      {formatCurrency(schedule.amount)}
+    </td>
+    <td className="px-6 py-5">
       {schedule.status === "paid" && (
-        <span className="px-3 py-1 rounded-full bg-green-100 text-green-700 text-[10px] font-black uppercase tracking-widest flex items-center w-fit gap-1">
-          Paid
+        <span className="px-3 py-1.5 rounded-full bg-green-100 text-green-700 text-[10px] font-black uppercase tracking-widest flex items-center w-fit gap-1.5 border border-green-200">
+          <span className="w-1.5 h-1.5 rounded-full bg-green-500" /> Paid
         </span>
       )}
       {schedule.status === "pending" && (
-        <span className="px-3 py-1 rounded-full bg-[#d0a539]/20 text-[#d0a539] text-[10px] font-black uppercase tracking-widest flex items-center w-fit gap-1">
-          <Clock className="w-3 h-3" /> Due Soon
+        <span className="px-3 py-1.5 rounded-full bg-[#d0a539]/10 text-[#d0a539] text-[10px] font-black uppercase tracking-widest flex items-center w-fit gap-1.5 border border-[#d0a539]/20">
+          <Clock className="w-3 h-3" /> Due
         </span>
       )}
       {schedule.status === "upcoming" && (
-        <span className="px-3 py-1 rounded-full bg-[#171512]/5 text-[#171512]/30 text-[10px] font-black uppercase tracking-widest flex items-center w-fit gap-1">
+        <span className="px-3 py-1.5 rounded-full bg-gray-100 text-gray-500 text-[10px] font-black uppercase tracking-widest flex items-center w-fit gap-1.5 border border-gray-200">
           <CalendarDays className="w-3 h-3" /> Upcoming
         </span>
       )}
       {schedule.status === "overdue" && (
-        <span className="px-3 py-1 rounded-full bg-red-100 text-red-600 text-[10px] font-black uppercase tracking-widest flex items-center w-fit gap-1">
+        <span className="px-3 py-1.5 rounded-full bg-red-100 text-red-600 text-[10px] font-black uppercase tracking-widest flex items-center w-fit gap-1.5 border border-red-200">
           <AlertCircle className="w-3 h-3" /> Overdue
         </span>
       )}
@@ -88,18 +158,6 @@ const ScheduleRow = memo(({ schedule }: { schedule: any }) => (
   </tr>
 ));
 ScheduleRow.displayName = "ScheduleRow";
-
-// --- Digital Vault Button ---
-const VaultButton = memo(({ label }: { label: string }) => (
-  <button className="flex flex-col items-center p-6 bg-white border border-[#171512]/5 rounded-2xl hover:border-[#d0a539]/50 transition-all group hover:shadow-lg">
-    <FileText className="w-8 h-8 text-[#d0a539] mb-3 group-hover:scale-110 transition-transform" />
-    <span className="text-[10px] font-black uppercase tracking-widest text-[#171512] text-center">
-      {label}
-    </span>
-    <span className="text-[9px] text-[#171512]/40 mt-1 uppercase">Unavailable</span>
-  </button>
-));
-VaultButton.displayName = "VaultButton";
 
 // ==========================================
 // 3. MAIN COMPONENT
@@ -110,30 +168,41 @@ interface DetailProps {
 }
 
 const InvestmentDetail = ({ id, onBack }: DetailProps) => {
+  const { user } = useAuth();
   const [investment, setInvestment] = useState<Investment | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchDetail = async () => {
-      try {
-        setLoading(true);
-        const data = await investmentClient.getInvestmentDetail(id);
-        setInvestment(data);
-      } catch (error) {
-        console.error("Failed to load investment details", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Fetch Data
+  const fetchDetail = async () => {
+    try {
+      setLoading(true);
+      const data = await investmentClient.getInvestmentDetail(id);
+      setInvestment(data);
+    } catch (error) {
+      console.error("Failed to load investment details", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     if (id) fetchDetail();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  const handlePaymentSuccess = () => {
+    alert("Payment Successful! Refreshing details...");
+    fetchDetail();
+  };
 
   if (loading) {
     return (
       <main className="flex-1 p-10 bg-[#f8f7f6] min-h-screen pt-24 flex items-center justify-center">
-        <div className="animate-pulse text-[#171512]/40 font-black tracking-widest uppercase">
-          Loading Details...
+        <div className="flex flex-col items-center gap-4 animate-pulse">
+          <Loader2 className="w-8 h-8 text-[#d0a539] animate-spin" />
+          <div className="text-[#171512]/40 font-black tracking-widest uppercase text-xs">
+            Loading Details...
+          </div>
         </div>
       </main>
     );
@@ -144,143 +213,218 @@ const InvestmentDetail = ({ id, onBack }: DetailProps) => {
   const isAgric = investment.investment_type === "agriculture";
   const nextPayment = investment.next_payment_data;
 
+  // FIX: ROBUST URL CLEANING
+  let imageSrc = investment.project_image || "/placeholder.jpg";
+  
+  if (imageSrc.includes("cloudinary.com")) {
+      // 1. Inject transformations (f_auto,q_auto) 
+      if (!imageSrc.includes("f_auto")) {
+          imageSrc = imageSrc.replace("/upload/", "/upload/f_auto,q_auto/");
+      }
+      
+      // 2. Force extension to .jpg if missing
+      // Next.js Image Component REQUIRES an extension to optimize correctly
+      if (!/\.[a-zA-Z0-9]+$/.test(imageSrc)) {
+          imageSrc += ".jpg";
+      }
+  }
+
   return (
-    <main className="flex-1 p-4 md:p-6 lg:p-10 bg-[#f8f7f6] min-h-screen text-[#171512] pt-24">
+    <main className="flex-1 p-4 md:p-6 lg:p-10 bg-[#f8f7f6] min-h-screen text-[#171512] pt-24 lg:pt-10">
+      
       {/* Header */}
-      <header className="flex justify-between items-start md:items-center mb-10 gap-4">
-        <div className="flex items-start md:items-center gap-4">
+      <header className="flex justify-between items-start md:items-center mb-8 gap-4">
+        <div className="flex items-center gap-4">
           <button
             onClick={onBack}
-            className="p-2 bg-white border border-[#171512]/10 rounded-full hover:bg-[#d0a539] hover:text-white transition-colors group shrink-0 mt-1 md:mt-0"
+            className="p-3 bg-white border border-[#171512]/10 rounded-full hover:bg-[#171512] hover:text-white transition-all group shadow-sm hover:shadow-md"
           >
-            <ArrowLeft className="w-5 h-5 text-[#171512] group-hover:text-white" />
+            <ArrowLeft className="w-5 h-5 text-[#171512] group-hover:text-white transition-colors" />
           </button>
           <div>
-            <h2 className="text-lg lg:text-3xl font-black text-[#171512] tracking-tight uppercase">
-              Investment Details
+            <h2 className="text-lg lg:text-2xl font-black text-[#171512] tracking-tight uppercase">
+              {investment.project_name}
             </h2>
-            <p className="text-[#171512]/50 text-xs lg:text-sm font-medium">
-              Overview & Schedule
-            </p>
+            <div className="flex items-center gap-2 text-[#171512]/50 text-xs font-medium mt-1">
+              <span className="uppercase tracking-widest">Investment Details</span>
+              <span className="w-1 h-1 rounded-full bg-[#171512]/30" />
+              <span>#{investment.id}</span>
+            </div>
           </div>
         </div>
-        {/* <NotificationComponent /> */}
       </header>
 
-      <div className="space-y-6 md:space-y-8">
-        {/* Main Card */}
-        <div className="bg-white rounded-2xl md:rounded-[2rem] border border-[#171512]/5 shadow-md overflow-hidden ring-1 ring-[#d0a539]/20">
-          
-          {/* Top Section: Overview */}
-          <div className="p-5 md:p-8 border-b border-[#171512]/5 flex flex-col lg:flex-row gap-6 lg:gap-8 items-start bg-white">
+      <div className="space-y-8 max-w-7xl mx-auto">
+        
+        {/* Top Section: Overview Card */}
+        <div className="bg-white rounded-[2rem] border border-[#171512]/5 shadow-sm overflow-hidden">
+          <div className="flex flex-col lg:flex-row">
             
-            {/* Image (Optimized) */}
-            <div className="w-full lg:w-72 h-48 sm:h-64 lg:h-48 rounded-2xl overflow-hidden shrink-0 relative bg-gray-100">
-              <div className="absolute top-3 left-3 lg:hidden z-10">
-                <span className="bg-green-500 text-white text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full shadow-md">
-                  {investment.status}
-                </span>
-              </div>
+            {/* Left: Image */}
+            <div className="w-full lg:w-[400px] h-64 lg:h-auto relative bg-gray-100">
               <Image
-                src={`${IMAGE_URL}${investment.project_image}`}
+                src={imageSrc}
                 alt={investment.project_name}
                 fill
                 className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 300px"
+                sizes="(max-width: 1024px) 100vw, 400px"
                 priority
               />
+              <div className="absolute top-4 left-4 z-10">
+                <span className="bg-white/90 backdrop-blur-md text-[#171512] text-[10px] font-black uppercase tracking-[0.2em] px-4 py-2 rounded-full shadow-lg border border-white/50">
+                  {investment.status}
+                </span>
+              </div>
             </div>
 
-            {/* Content */}
-            <div className="flex-1 w-full">
-              <div className="flex flex-col sm:flex-row justify-between items-start mb-6 gap-4">
+            {/* Right: Content */}
+            <div className="flex-1 p-6 md:p-10 flex flex-col justify-between gap-8">
+              
+              {/* Header Info */}
+              <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
                 <div>
-                  <span className="hidden lg:inline-block bg-green-500 text-white text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full mb-3">
-                    {investment.status}
-                  </span>
-                  <h3 className="text-md xl:text-xl font-black text-[#171512] tracking-tighter uppercase leading-tight">
-                    {investment.project_name}
+                  <h3 className="text-2xl md:text-3xl font-serif font-black text-[#171512] leading-tight mb-2">
+                    {formatCurrency(investment.agreed_amount)}
                   </h3>
-                  <p className="flex items-center gap-2 text-[#171512]/40 text-xs sm:text-sm font-bold uppercase tracking-widest mt-2">
-                    <MapPin className="w-3 h-3 sm:w-4 sm:h-4" /> {investment.location}
+                  <p className="flex items-center gap-2 text-[#171512]/50 text-xs font-bold uppercase tracking-widest">
+                    <MapPin className="w-4 h-4 text-[#d0a539]" /> {investment.location}
                   </p>
                 </div>
-                <div className="text-left sm:text-right w-full sm:w-auto bg-[#f8f7f6] sm:bg-transparent p-3 sm:p-0 rounded-xl">
-                  <p className="text-[10px] text-[#171512]/40 font-black uppercase tracking-widest mb-1">Total Value</p>
-                  <p className="text-xl xl:text-3xl font-black text-[#171512]">{formatCurrency(investment.agreed_amount)}</p>
-                </div>
+                
+                {/* Pay Button */}
+                <DetailPaymentButton
+                  amount={nextPayment?.amount || 0}
+                  email={user?.email || ""}
+                  investmentId={investment.id}
+                  onSuccess={handlePaymentSuccess}
+                  disabled={!nextPayment || nextPayment.amount <= 0}
+                />
               </div>
 
               {/* Stats Grid */}
-              <div className={`grid gap-4 sm:gap-6 ${isAgric ? "grid-cols-2 md:grid-cols-4" : "grid-cols-2 md:grid-cols-3"}`}>
-                <StatCard 
-                  label="Balance" 
-                  value={formatCurrency(investment.balance)} 
-                  highlightColor="text-[#d0a539]" 
+              <div className={`grid gap-4 ${isAgric ? "grid-cols-2 lg:grid-cols-4" : "grid-cols-2 lg:grid-cols-3"}`}>
+                <StatCard
+                  label="Balance Remaining"
+                  value={formatCurrency(investment.balance)}
+                  highlightColor="text-[#d0a539]"
                   isFullWidth={true}
                 />
-                
-                {isAgric && (
-                  <StatCard 
-                    label="Expected ROI" 
-                    value={`${investment.roi}%`} 
-                    subText={<span className="text-[10px] text-[#171512]/30">p.a.</span>}
-                  />
-                )}
 
-                <StatCard 
-                  label="Progress" 
-                  value={`${investment.percentage_completion}%`} 
+                <StatCard
+                  label="Progress"
+                  value={`${investment.percentage_completion}%`}
+                  subText={
+                    <span className="block w-full h-1.5 bg-[#171512]/5 rounded-full mt-2 overflow-hidden">
+                      <span 
+                        className="block h-full bg-[#d0a539] rounded-full" 
+                        style={{ width: `${investment.percentage_completion}%` }}
+                      />
+                    </span>
+                  }
                 />
 
-                <div className="p-3 sm:p-0 bg-[#f8f7f6] sm:bg-transparent rounded-xl">
-                  <p className="text-[9px] sm:text-[10px] text-[#171512]/40 font-black uppercase tracking-widest">Next Due</p>
-                  <p className="text-base sm:text-lg font-black text-[#171512]">
-                    {nextPayment ? formatDate(nextPayment.due_date) : "Completed"}
-                  </p>
-                  {nextPayment && (
-                    <p className="text-[10px] font-bold text-[#d0a539]">{nextPayment.days_left} Days Left</p>
-                  )}
-                </div>
+                <StatCard
+                  label="Next Due Date"
+                  value={nextPayment ? formatDate(nextPayment.due_date) : "Completed"}
+                  highlightColor={nextPayment?.days_left === 0 ? "text-red-500" : ""}
+                  subText={
+                    nextPayment && (
+                      <span className="block text-[10px] text-[#171512]/40 font-medium mt-1">
+                        {nextPayment.days_left} Days remaining
+                      </span>
+                    )
+                  }
+                />
+
+                {isAgric && (
+                  <StatCard
+                    label="Projected ROI"
+                    value={`${investment.roi}%`}
+                    subText={<span className="text-xs text-[#171512]/30 font-medium">p.a.</span>}
+                  />
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Section: Payment Schedule & Docs */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          
+          {/* Payment Schedule */}
+          <div className="lg:col-span-2 space-y-6">
+            <div className="flex items-center gap-3">
+              <div className="bg-[#171512] p-2 rounded-lg text-white">
+                <CalendarClock className="w-5 h-5" />
+              </div>
+              <h4 className="text-lg font-black uppercase tracking-tight">Payment Schedule</h4>
+            </div>
+
+            <div className="bg-white rounded-2xl border border-[#171512]/5 shadow-sm overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left min-w-[600px]">
+                  <thead>
+                    <tr className="bg-[#f8f7f6] border-b border-[#171512]/5 text-[#171512]/40 text-[10px] font-black uppercase tracking-[0.2em]">
+                      <th className="px-6 py-4">Installment</th>
+                      <th className="px-6 py-4">Due Date</th>
+                      <th className="px-6 py-4">Amount</th>
+                      <th className="px-6 py-4">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#171512]/5">
+                    {investment.schedules?.map((schedule) => (
+                      <ScheduleRow key={schedule.id} schedule={schedule} />
+                    ))}
+                    {!investment.schedules?.length && (
+                      <tr>
+                        <td colSpan={4} className="px-6 py-8 text-center text-sm text-[#171512]/40">
+                          No payment schedule available.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
 
-          {/* Bottom Section */}
-          <div className="p-5 md:p-8 bg-[#f8f7f6]/30">
-            <div className="lg:col-span-2 space-y-8">
-              
-              {/* Payment Schedule */}
-              <div>
-                <div className="flex items-center gap-3 mb-4 sm:mb-6">
-                  <div className="bg-[#d0a539]/10 p-2 rounded-lg text-[#d0a539]">
-                    <CalendarClock className="w-5 h-5" />
-                  </div>
-                  <h4 className="text-base sm:text-lg font-black uppercase tracking-tight">Payment Schedule</h4>
-                </div>
-
-                <div className="bg-white rounded-2xl border border-[#171512]/5 shadow-sm overflow-hidden">
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-left min-w-[600px]">
-                      <thead>
-                        <tr className="bg-[#171512] text-white text-[10px] font-black uppercase tracking-[0.2em]">
-                          <th className="px-6 py-4">Title</th>
-                          <th className="px-6 py-4">Due Date</th>
-                          <th className="px-6 py-4">Amount</th>
-                          <th className="px-6 py-4">Status</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-[#171512]/5">
-                        {investment.schedules?.map((schedule) => (
-                          <ScheduleRow key={schedule.id} schedule={schedule} />
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
+          {/* Documents Section */}
+          <div className="space-y-6">
+            <div className="flex items-center gap-3">
+              <div className="bg-[#d0a539] p-2 rounded-lg text-[#171512]">
+                <FileText className="w-5 h-5" />
               </div>
+              <h4 className="text-lg font-black uppercase tracking-tight">Documents</h4>
+            </div>
+
+            <div className="bg-white p-6 rounded-2xl border border-[#171512]/5 shadow-sm space-y-4">
+               {/* Doc Items */}
+               <div className="flex items-center gap-4 p-4 rounded-xl bg-[#f8f7f6] border border-[#171512]/5 hover:border-[#d0a539]/30 transition-colors cursor-pointer group">
+                  <div className="bg-white p-2 rounded-lg shadow-sm group-hover:scale-110 transition-transform">
+                     <FileText className="w-5 h-5 text-[#d0a539]" />
+                  </div>
+                  <div>
+                     <p className="text-xs font-bold text-[#171512]">Allocation Letter</p>
+                     <p className="text-[10px] text-[#171512]/40 uppercase tracking-widest mt-0.5">PDF • 1.2MB</p>
+                  </div>
+               </div>
+               
+               <div className="flex items-center gap-4 p-4 rounded-xl bg-[#f8f7f6] border border-[#171512]/5 hover:border-[#d0a539]/30 transition-colors cursor-pointer group">
+                  <div className="bg-white p-2 rounded-lg shadow-sm group-hover:scale-110 transition-transform">
+                     <FileText className="w-5 h-5 text-[#d0a539]" />
+                  </div>
+                  <div>
+                     <p className="text-xs font-bold text-[#171512]">Payment Receipt</p>
+                     <p className="text-[10px] text-[#171512]/40 uppercase tracking-widest mt-0.5">PDF • 450KB</p>
+                  </div>
+               </div>
+
+               <button className="w-full py-3 text-[10px] font-black uppercase tracking-widest text-[#171512]/40 hover:text-[#d0a539] transition-colors border-t border-[#171512]/5 mt-2">
+                  View All Documents
+               </button>
             </div>
           </div>
+
         </div>
       </div>
     </main>

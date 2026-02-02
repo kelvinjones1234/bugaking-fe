@@ -70,6 +70,8 @@ class APIClient {
   }
 
   async getInvestmentDetail(id: number): Promise<Investment> {
+    console.log("detail id:", id);
+    
     const response = await api.get(`/client-investments/${id}/`);
     return this.handleResponse<Investment>(response);
   }

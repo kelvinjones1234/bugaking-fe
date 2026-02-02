@@ -157,7 +157,7 @@ export function Main() {
                 href="/authentication/signin"
                 className="px-8 py-4 bg-[#d0a539] text-[#171512] font-black uppercase tracking-widest rounded-lg hover:scale-105 transition-transform text-center w-full sm:w-auto min-w-[200px]"
               >
-                Start Investing
+                Sign in
               </Link>
               <Link
                 href="/offers"

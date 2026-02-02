@@ -22,6 +22,7 @@ import {
   useInView,
   Variants,
 } from "framer-motion";
+import Link from "next/link";
 
 // --- Animation Variants ---
 
@@ -149,24 +150,31 @@ const Main: React.FC = () => {
               variants={fadeInUp}
               className="flex flex-col sm:flex-row gap-4 justify-center pt-8 w-full sm:w-auto"
             >
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-[#d0a539] text-[#171512] px-8 py-4 sm:px-10 sm:py-5 rounded-xl text-sm sm:text-base font-black uppercase tracking-widest shadow-xl shadow-[#d0a539]/20 w-full sm:w-auto"
-              >
-                Start Investing
-              </motion.button>
-              <motion.button
-                whileHover={{
-                  scale: 1.05,
-                  backgroundColor: "rgba(255,255,255,0.2)",
-                }}
-                whileTap={{ scale: 0.95 }}
-                className="group bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 py-4 sm:px-10 sm:py-5 rounded-xl text-sm sm:text-base font-black uppercase tracking-widest w-full sm:w-auto flex items-center justify-center gap-2"
-              >
-                Our offers
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </motion.button>
+              {/* Start Investing Link */}
+              <Link href="/authentication/signin" className="w-full sm:w-auto">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="bg-[#d0a539] text-[#171512] px-8 py-4 sm:px-10 sm:py-5 rounded-xl text-sm sm:text-base font-black uppercase tracking-widest shadow-xl shadow-[#d0a539]/20 w-full sm:w-auto min-w-[200px]"
+                >
+                  Start Investing
+                </motion.button>
+              </Link>
+
+              {/* Our Offers Link */}
+              <Link href="/offers" className="w-full sm:w-auto">
+                <motion.button
+                  whileHover={{
+                    scale: 1.05,
+                    backgroundColor: "rgba(255,255,255,0.2)",
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                  className="group bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 py-4 sm:px-10 sm:py-5 rounded-xl text-sm sm:text-base font-black uppercase tracking-widest w-full sm:w-auto min-w-[200px] flex items-center justify-center gap-2"
+                >
+                  Our offers
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </motion.button>
+              </Link>
             </motion.div>
           </motion.div>
         </div>

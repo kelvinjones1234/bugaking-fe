@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useMemo, memo } from "react";
-import Image from "next/image"; // Reverted to Next/Image
+// Using standard <img> to avoid Next.js server-side 500 errors with Cloudinary
 import {
   FileText,
   MapPin,
@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { usePaystackPayment } from "react-paystack";
 import { useAuth } from "@/context/AuthContext";
+// Ensure this path matches your project structure
 import { investmentClient, Investment } from "@/app/dashboard/api/portfolioApi";
 
 // ==========================================
@@ -42,7 +43,7 @@ const formatDate = (dateString: string) => {
 // 2. SUB-COMPONENTS (Memoized)
 // ==========================================
 
-// --- Payment Button ---
+// --- Payment Button (Integrated for Detail View) ---
 interface PaymentButtonProps {
   amount: number;
   email: string;
@@ -53,12 +54,16 @@ interface PaymentButtonProps {
 
 const DetailPaymentButton = memo(
   ({ amount, email, investmentId, onSuccess, disabled }: PaymentButtonProps) => {
+    
+    // Fallback email to prevent Paystack crash if user context is slow or missing
+    const validEmail = email || "customer@bugaking.com";
+
     const config = useMemo(
       () => ({
         reference: "BKG_" + new Date().getTime().toString(),
-        email: email,
-        amount: Math.ceil(amount * 100),
-        publicKey: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || "",
+        email: validEmail,
+        amount: Math.ceil(amount * 100), // Convert to kobo
+        publicKey: "pk_test_3a0f33d0a0fbd53e944055d6d436b904d0aafcc0",
         metadata: {
           investment_id: investmentId,
           custom_fields: [
@@ -70,16 +75,21 @@ const DetailPaymentButton = memo(
           ],
         },
       }),
-      [amount, email, investmentId]
+      [amount, validEmail, investmentId]
     );
 
     const initializePayment = usePaystackPayment(config);
 
+    // If fully paid or no amount due, don't render button
     if (disabled || amount <= 0) return null;
 
     return (
       <button
-        onClick={() => initializePayment({ onSuccess, onClose: () => {} })}
+        type="button" 
+        onClick={(e) => {
+            e.preventDefault(); 
+            initializePayment({ onSuccess, onClose: () => {} });
+        }}
         className="w-full sm:w-auto px-6 py-3 bg-[#d0a539] text-[#171512] font-black uppercase tracking-widest text-[10px] rounded-lg hover:bg-[#d0a539]/90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#d0a539]/20"
       >
         <CreditCard className="w-4 h-4" />
@@ -192,6 +202,7 @@ const InvestmentDetail = ({ id, onBack }: DetailProps) => {
 
   const handlePaymentSuccess = () => {
     alert("Payment Successful! Refreshing details...");
+    // Re-fetch data to update the balance and progress bar immediately
     fetchDetail();
   };
 
@@ -213,17 +224,15 @@ const InvestmentDetail = ({ id, onBack }: DetailProps) => {
   const isAgric = investment.investment_type === "agriculture";
   const nextPayment = investment.next_payment_data;
 
-  // FIX: ROBUST URL CLEANING
+  // URL CLEANING Logic (Fixes 500 Error)
   let imageSrc = investment.project_image || "/placeholder.jpg";
   
   if (imageSrc.includes("cloudinary.com")) {
-      // 1. Inject transformations (f_auto,q_auto) 
+      // Inject transformations (f_auto,q_auto) if missing
       if (!imageSrc.includes("f_auto")) {
           imageSrc = imageSrc.replace("/upload/", "/upload/f_auto,q_auto/");
       }
-      
-      // 2. Force extension to .jpg if missing
-      // Next.js Image Component REQUIRES an extension to optimize correctly
+      // Force extension to .jpg if missing
       if (!/\.[a-zA-Z0-9]+$/.test(imageSrc)) {
           imageSrc += ".jpg";
       }
@@ -260,15 +269,14 @@ const InvestmentDetail = ({ id, onBack }: DetailProps) => {
         <div className="bg-white rounded-[2rem] border border-[#171512]/5 shadow-sm overflow-hidden">
           <div className="flex flex-col lg:flex-row">
             
-            {/* Left: Image */}
+            {/* Left: Image (Standard IMG Tag with Layout Preserved) */}
             <div className="w-full lg:w-[400px] h-64 lg:h-auto relative bg-gray-100">
-              <Image
+              <img
                 src={imageSrc}
                 alt={investment.project_name}
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 400px"
-                priority
+                // These classes replicate the behavior of Next.js 'fill'
+                className="absolute inset-0 w-full h-full object-cover"
+                loading="lazy"
               />
               <div className="absolute top-4 left-4 z-10">
                 <span className="bg-white/90 backdrop-blur-md text-[#171512] text-[10px] font-black uppercase tracking-[0.2em] px-4 py-2 rounded-full shadow-lg border border-white/50">
@@ -291,7 +299,7 @@ const InvestmentDetail = ({ id, onBack }: DetailProps) => {
                   </p>
                 </div>
                 
-                {/* Pay Button */}
+                {/* Pay Button (Added Here) */}
                 <DetailPaymentButton
                   amount={nextPayment?.amount || 0}
                   email={user?.email || ""}

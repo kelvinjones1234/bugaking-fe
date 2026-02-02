@@ -50,7 +50,7 @@ const NotificationComponent = () => {
   };
 
   // Determine image source
-  const finalImage = headerData?.profile_image || "/leadership2.jpg";
+  const finalImage = headerData?.profile_image || "/bugakingLogo.png";
 
   if (loading) {
     return <div className="animate-pulse w-10 h-10 bg-gray-200 rounded-full"></div>;

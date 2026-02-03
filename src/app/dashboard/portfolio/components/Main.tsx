@@ -55,9 +55,9 @@ const PaymentButton = memo(({ amount, email, investmentId, onSuccess, onClose, d
     reference: "BKG_" + new Date().getTime().toString(),
     email: email,
     amount: amount * 100, // Paystack expects Kobo
-    // publicKey: "pk_live_c1fb7ac4aad4294f6325d0831b232ff029394d6d", // Replace with env variable in prod
+    publicKey: "pk_live_c1fb7ac4aad4294f6325d0831b232ff029394d6d", // Replace with env variable in prod
 
-    publicKey: "pk_test_3a0f33d0a0fbd53e944055d6d436b904d0aafcc0",
+    // publicKey: "pk_test_3a0f33d0a0fbd53e944055d6d436b904d0aafcc0",
 
 
     metadata: {

@@ -498,13 +498,15 @@ export default function Main() {
             diversified, high-yield asset ownership across our core sectors.
           </p>
           <div className="pt-8">
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-[#d0a539] text-[#171512] px-10 py-5 md:px-12 md:py-6 rounded-full text-sm md:text-base font-black uppercase tracking-widest shadow-2xl shadow-[#d0a539]/40 hover:shadow-[#d0a539]/60 transition-all"
-            >
-              Join the Ecosystem
-            </motion.button>
+            <Link href="/signup">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-[#d0a539] text-[#171512] px-10 py-5 md:px-12 md:py-6 rounded-full text-sm md:text-base font-black uppercase tracking-widest shadow-2xl shadow-[#d0a539]/40 hover:shadow-[#d0a539]/60 transition-all"
+              >
+                Join the Ecosystem
+              </motion.button>
+            </Link>
           </div>
         </motion.div>
       </section>

@@ -16,8 +16,8 @@ const CONFIG = {
     IMAGE_URL: "http://localhost:8000",
   },
   production: {
-    API_URL: "https://bugaking.pythonanywhere.com/api",
-    IMAGE_URL: "https://bugaking.pythonanywhere.com",
+    API_URL: "https://bugaking.com.ng/api",
+    IMAGE_URL: "https://bugaking.com.ng",
   },
 };
 

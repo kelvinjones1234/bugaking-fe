@@ -9,7 +9,7 @@ import {
   ShieldCheck,
   Globe,
 } from "lucide-react";
-import { motion, Variants } from "framer-motion";
+import { motion, Variants } from "framer-motion"; 
 import Link from "next/link";
 
 // --- Helpers & Variants ---
@@ -438,9 +438,9 @@ export default function Main() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
             {[
-              { val: "12k+", label: "Verified Investors" },
+              { val: "5", label: "Verified Investors" },
               { val: "₦1.4B", label: "Assets Under Management" },
-              { val: "42", label: "Strategic Locations" },
+              // { val: "42", label: "Strategic Locations" },
               { val: "24%", label: "Avg. Annual Growth" },
             ].map((item, idx) => (
               <motion.div

@@ -33,13 +33,13 @@ export function Footer() {
           </h4>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="#" className="hover:text-primary transition-colors">
-                Agri-Science
+              <Link href="/agriculture" className="hover:text-primary transition-colors">
+                Agriculture Investments
               </Link>
             </li>
             <li>
-              <Link href="#" className="hover:text-primary transition-colors">
-                Tech Infrastructure
+              <Link href="https://billvest.ng" className="hover:text-primary transition-colors">
+                Tech
               </Link>
             </li>
             <li>

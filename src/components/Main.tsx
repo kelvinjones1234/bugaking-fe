@@ -9,7 +9,7 @@ import {
   ShieldCheck,
   Globe,
 } from "lucide-react";
-import { motion, Variants } from "framer-motion"; 
+import { motion, Variants } from "framer-motion";
 import Link from "next/link";
 
 // --- Helpers & Variants ---
@@ -287,10 +287,13 @@ export default function Main() {
                     for partial ownership with professional management, turning
                     fertile soil into liquid returns.
                   </p>
-                  <button className="text-[#d0a539] font-black text-xs uppercase tracking-widest flex items-center gap-2 group">
-                    View Farmland Portfolio{" "}
+                  <Link
+                    href={`/offers`}
+                    className="text-[#d0a539] font-black text-xs uppercase tracking-widest flex items-center gap-2 group"
+                  >
+                    View Farmland Offers{" "}
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
-                  </button>
+                  </Link>
                 </div>
               </motion.div>
             </motion.div>

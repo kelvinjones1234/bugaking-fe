@@ -498,7 +498,7 @@ export default function Main() {
             diversified, high-yield asset ownership across our core sectors.
           </p>
           <div className="pt-8">
-            <Link href="/signup">
+            <Link href="/authentication/signup">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}

@@ -3,7 +3,7 @@ import Link from "next/link";
 export function DesktopNavbar() {
   const links = [
     { name: "Agriculture", href: "/agriculture" },
-    { name: "Tech", href: "/www.billvest.ng" },
+    { name: "Tech", href: "www.billvest.ng" },
     { name: "Real Estate", href: "/real-estate" },
     { name: "Legacy", href: "/legacy" },
   ];

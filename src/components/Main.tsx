@@ -440,7 +440,7 @@ export default function Main() {
             {[
               { val: "5", label: "Verified Investors" },
               { val: "₦1.4B", label: "Assets Under Management" },
-              // { val: "42", label: "Strategic Locations" },
+              { val: "75+", label: "Active Client" },
               { val: "24%", label: "Avg. Annual Growth" },
             ].map((item, idx) => (
               <motion.div

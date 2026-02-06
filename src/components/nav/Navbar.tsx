@@ -21,7 +21,17 @@ export function Navbar() {
         </div>
         {/* Actions */}
         <div className="flex items-center gap-6">
-          <button className="bg-primary text-charcoal px-6 py-2 rounded-brand text-sm font-bold uppercase tracking-wider hover:bg-primary/90 transition-all shadow-lg shadow-primary/20">
+          <button
+            onClick={() => {
+              const phoneNumber = "2348141772672";
+              const message = "Hello, I want to inquire about this.";
+              window.open(
+                `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`,
+                "_blank",
+              );
+            }}
+            className="bg-primary text-charcoal px-6 py-2 rounded-brand text-sm font-bold uppercase tracking-wider hover:bg-primary/90 transition-all shadow-lg shadow-primary/20"
+          >
             Inquire
           </button>
         </div>

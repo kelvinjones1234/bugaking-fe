@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect } from "react";
 
-interface MobileNavbarProps { 
+interface MobileNavbarProps {
   isOpen: boolean;
   setIsOpen: (value: boolean) => void;
 }
@@ -84,7 +84,18 @@ export function MobileNavbar({ isOpen, setIsOpen }: MobileNavbarProps) {
 
           {/* Bottom Action */}
           <div className="mt-auto space-y-6">
-            <button className="w-full bg-primary text-charcoal py-4 rounded-brand font-bold uppercase tracking-widest">
+            <button
+              onClick={() => {
+                const phoneNumber = "2348164257149";
+                const message =
+                  "Hello, I want to inquire about this real estate project.";
+                window.open(
+                  `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`,
+                  "_blank",
+                );
+              }}
+              className="w-full bg-primary text-charcoal py-4 rounded-brand font-bold uppercase tracking-widest hover:scale-[1.02] transition-transform"
+            >
               Inquire Now
             </button>
             <p className="text-xs text-foreground/40 text-center uppercase tracking-widest">

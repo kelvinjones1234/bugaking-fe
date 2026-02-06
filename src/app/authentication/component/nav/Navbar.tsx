@@ -30,7 +30,7 @@ export function Navbar() {
           <button
             onClick={() => {
               // 1. Your WhatsApp Number
-              const phoneNumber = "2348141772672";
+              const phoneNumber = "2348164257149";
 
               // 2. The message
               const message =

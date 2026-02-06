@@ -2,9 +2,11 @@ import Link from "next/link";
 
 export function DesktopNavbar() {
   const links = [
+    { name: "Home", href: "/" },
     { name: "Agriculture", href: "/agriculture" },
     { name: "Tech", href: "https://billvest.ng" },
     { name: "Real Estate", href: "/real-estate" },
+    { name: "Offers", href: "/offers" },
     { name: "Legacy", href: "/legacy" },
   ];
 

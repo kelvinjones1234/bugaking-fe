@@ -3,7 +3,7 @@ import Link from "next/link";
 export function DesktopNavbar() {
   const links = [
     { name: "Agriculture", href: "/agriculture" },
-    { name: "Tech", href: "technology" }, // Fixed missing slash in href
+    { name: "Tech", href: "/www.billvest.ng" }, // Fixed missing slash in href
     { name: "Real Estate", href: "/real-estate" },
     { name: "Legacy", href: "/legacy" },
   ];

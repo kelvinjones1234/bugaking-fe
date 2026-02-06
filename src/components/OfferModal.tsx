@@ -235,12 +235,6 @@
 //   );
 // }
 
-
-
-
-
-
-
 // "use client";
 
 // import { useState } from "react";
@@ -478,14 +472,6 @@
 //   );
 // }
 
-
-
-
-
-
-
-
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -702,11 +688,35 @@ export default function OfferModal({
                   transition={{ delay: 0.4 }}
                   className="pt-1"
                 >
-                  <button
+                  {/* <button
                     onClick={onClose}
                     className="w-full bg-primary text-charcoal py-2 rounded-brand text-[10px] font-bold uppercase tracking-widest hover:scale-[1.02] transition-transform shadow-[0_0_10px_rgba(208,165,57,0.15)]"
                   >
-                    Claim Offer
+                    Know More
+                  </button> */}
+
+                  <button
+                    onClick={() => {
+                      // 1. Your WhatsApp Number (Format: CountryCode + Number, no '+' sign)
+                      // Example: 2348012345678 for a Nigerian number
+                      const phoneNumber = "2348164257149";
+
+                      // 2. The default message the user will send
+                      const message =
+                        "Hello, I would like to know more about this investment opportunity.";
+
+                      // 3. Create the URL
+                      const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+
+                      // 4. Open WhatsApp in a new tab
+                      window.open(url, "_blank");
+
+                      // 5. Close the modal (Good UX so it's gone when they return)
+                      onClose();
+                    }}
+                    className="w-full bg-primary text-charcoal py-2 rounded-brand text-[10px] font-bold uppercase tracking-widest hover:scale-[1.02] transition-transform shadow-[0_0_10px_rgba(208,165,57,0.15)]"
+                  >
+                    Chat on WhatsApp
                   </button>
                 </motion.div>
               </div>

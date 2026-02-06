@@ -84,7 +84,23 @@ export function MobileNavbar({ isOpen, setIsOpen }: MobileNavbarProps) {
 
           {/* Bottom Action */}
           <div className="mt-auto space-y-6">
-            <button className="w-full bg-primary text-charcoal py-4 rounded-brand font-bold uppercase tracking-widest">
+            <button
+              onClick={() => {
+                // 1. Your WhatsApp Number
+                const phoneNumber = "2348164257149";
+
+                // 2. The specific message for this button
+                const message =
+                  "Hello, I want to inquire about this real estate project.";
+
+                // 3. Create the URL
+                const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+
+                // 4. Open in new tab
+                window.open(url, "_blank");
+              }}
+              className="w-full bg-primary text-charcoal py-4 rounded-brand font-bold uppercase tracking-widest hover:scale-[1.02] transition-transform"
+            >
               Inquire Now
             </button>
             <p className="text-xs text-foreground/40 text-center uppercase tracking-widest">

@@ -305,7 +305,7 @@ export const Main = () => {
             <p className="text-[#171512]/50 text-xs lg:text-sm">Your active real estate assets</p>
           </div>
           <Link href="/dashboard/portfolio" className="text-[10px] lg:text-xs font-black text-[#d0a539] flex items-center gap-2 hover:gap-3 transition-all">
-            VIEW ALL <span className="hidden sm:inline">PORTFOLIO</span> <ArrowRight size={14} strokeWidth={3} />
+            VIEW ALL <span className="hidden sm:inline">PORTFOLIO</span> 
           </Link>
         </div>
 

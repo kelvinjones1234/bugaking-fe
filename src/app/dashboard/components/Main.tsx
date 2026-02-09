@@ -108,7 +108,7 @@ const PortfolioCard = memo(({ item, onViewDetail }: { item: any, onViewDetail: (
   <div className="bg-white rounded-2xl overflow-hidden border border-[#171512]/5 group shadow-sm hover:shadow-xl transition-all flex flex-col h-full">
     <div className="relative h-40 lg:h-48 w-full overflow-hidden">
       <Image 
-        src={item.project_img || ""} 
+        src={item.project_image || ""} 
         alt={item.project_name}
         fill
         className="object-cover transition-transform duration-500 group-hover:scale-110"

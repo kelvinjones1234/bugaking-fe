@@ -53,8 +53,13 @@ interface PaymentButtonProps {
 }
 
 const DetailPaymentButton = memo(
-  ({ amount, email, investmentId, onSuccess, disabled }: PaymentButtonProps) => {
-    
+  ({
+    amount,
+    email,
+    investmentId,
+    onSuccess,
+    disabled,
+  }: PaymentButtonProps) => {
     // Fallback email to prevent Paystack crash if user context is slow or missing
     const validEmail = email || "customer@bugaking.com";
 
@@ -75,7 +80,7 @@ const DetailPaymentButton = memo(
           ],
         },
       }),
-      [amount, validEmail, investmentId]
+      [amount, validEmail, investmentId],
     );
 
     const initializePayment = usePaystackPayment(config);
@@ -85,10 +90,10 @@ const DetailPaymentButton = memo(
 
     return (
       <button
-        type="button" 
+        type="button"
         onClick={(e) => {
-            e.preventDefault(); 
-            initializePayment({ onSuccess, onClose: () => {} });
+          e.preventDefault();
+          initializePayment({ onSuccess, onClose: () => {} });
         }}
         className="w-full sm:w-auto px-6 py-3 bg-[#d0a539] text-[#171512] font-black uppercase tracking-widest text-[10px] rounded-lg hover:bg-[#d0a539]/90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#d0a539]/20"
       >
@@ -96,7 +101,7 @@ const DetailPaymentButton = memo(
         Pay Next Installment
       </button>
     );
-  }
+  },
 );
 DetailPaymentButton.displayName = "DetailPaymentButton";
 
@@ -127,7 +132,7 @@ const StatCard = memo(
         {value} {subText}
       </p>
     </div>
-  )
+  ),
 );
 StatCard.displayName = "StatCard";
 
@@ -226,21 +231,20 @@ const InvestmentDetail = ({ id, onBack }: DetailProps) => {
 
   // URL CLEANING Logic (Fixes 500 Error)
   let imageSrc = investment.project_image || "/placeholder.jpg";
-  
+
   if (imageSrc.includes("cloudinary.com")) {
-      // Inject transformations (f_auto,q_auto) if missing
-      if (!imageSrc.includes("f_auto")) {
-          imageSrc = imageSrc.replace("/upload/", "/upload/f_auto,q_auto/");
-      }
-      // Force extension to .jpg if missing
-      if (!/\.[a-zA-Z0-9]+$/.test(imageSrc)) {
-          imageSrc += ".jpg";
-      }
+    // Inject transformations (f_auto,q_auto) if missing
+    if (!imageSrc.includes("f_auto")) {
+      imageSrc = imageSrc.replace("/upload/", "/upload/f_auto,q_auto/");
+    }
+    // Force extension to .jpg if missing
+    if (!/\.[a-zA-Z0-9]+$/.test(imageSrc)) {
+      imageSrc += ".jpg";
+    }
   }
 
   return (
     <main className="flex-1 p-4 md:p-6 lg:p-10 bg-[#f8f7f6] min-h-screen text-[#171512] pt-24 lg:pt-10">
-      
       {/* Header */}
       <header className="flex justify-between items-start md:items-center mb-8 gap-4">
         <div className="flex items-center gap-4">
@@ -255,7 +259,9 @@ const InvestmentDetail = ({ id, onBack }: DetailProps) => {
               {investment.project_name}
             </h2>
             <div className="flex items-center gap-2 text-[#171512]/50 text-xs font-medium mt-1">
-              <span className="uppercase tracking-widest">Investment Details</span>
+              <span className="uppercase tracking-widest">
+                Investment Details
+              </span>
               <span className="w-1 h-1 rounded-full bg-[#171512]/30" />
               <span>#{investment.id}</span>
             </div>
@@ -264,11 +270,9 @@ const InvestmentDetail = ({ id, onBack }: DetailProps) => {
       </header>
 
       <div className="space-y-8 max-w-7xl mx-auto">
-        
         {/* Top Section: Overview Card */}
         <div className="bg-white rounded-[2rem] border border-[#171512]/5 shadow-sm overflow-hidden">
           <div className="flex flex-col lg:flex-row">
-            
             {/* Left: Image (Standard IMG Tag with Layout Preserved) */}
             <div className="w-full lg:w-[400px] h-64 lg:h-auto relative bg-gray-100">
               <img
@@ -287,7 +291,6 @@ const InvestmentDetail = ({ id, onBack }: DetailProps) => {
 
             {/* Right: Content */}
             <div className="flex-1 p-6 md:p-10 flex flex-col justify-between gap-8">
-              
               {/* Header Info */}
               <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
                 <div>
@@ -295,10 +298,11 @@ const InvestmentDetail = ({ id, onBack }: DetailProps) => {
                     {formatCurrency(investment.agreed_amount)}
                   </h3>
                   <p className="flex items-center gap-2 text-[#171512]/50 text-xs font-bold uppercase tracking-widest">
-                    <MapPin className="w-4 h-4 text-[#d0a539]" /> {investment.location}
+                    <MapPin className="w-4 h-4 text-[#d0a539]" />{" "}
+                    {investment.location}
                   </p>
                 </div>
-                
+
                 {/* Pay Button (Added Here) */}
                 <DetailPaymentButton
                   amount={nextPayment?.amount || 0}
@@ -310,7 +314,9 @@ const InvestmentDetail = ({ id, onBack }: DetailProps) => {
               </div>
 
               {/* Stats Grid */}
-              <div className={`grid gap-4 ${isAgric ? "grid-cols-2 lg:grid-cols-4" : "grid-cols-2 lg:grid-cols-3"}`}>
+              <div
+                className={`grid gap-4 ${isAgric ? "grid-cols-2 lg:grid-cols-4" : "grid-cols-2 lg:grid-cols-3"}`}
+              >
                 <StatCard
                   label="Balance Remaining"
                   value={formatCurrency(investment.balance)}
@@ -323,15 +329,17 @@ const InvestmentDetail = ({ id, onBack }: DetailProps) => {
                   value={`${investment.percentage_completion}%`}
                   subText={
                     <span className="block w-full h-1.5 bg-[#171512]/5 rounded-full mt-2 overflow-hidden">
-                      <span 
-                        className="block h-full bg-[#d0a539] rounded-full" 
-                        style={{ width: `${investment.percentage_completion}%` }}
+                      <span
+                        className="block h-full bg-[#d0a539] rounded-full"
+                        style={{
+                          width: `${investment.percentage_completion}%`,
+                        }}
                       />
                     </span>
                   }
                 />
 
-                <StatCard
+                {/* <StatCard
                   label="Next Due Date"
                   value={nextPayment ? formatDate(nextPayment.due_date) : "Completed"}
                   highlightColor={nextPayment?.days_left === 0 ? "text-red-500" : ""}
@@ -342,13 +350,47 @@ const InvestmentDetail = ({ id, onBack }: DetailProps) => {
                       </span>
                     )
                   }
+                /> */}
+
+                <StatCard
+                  label="Next Due Date"
+                  value={
+                    nextPayment ? formatDate(nextPayment.due_date) : "Completed"
+                  }
+                  // Fix 1: Default to 0 if undefined
+                  highlightColor={
+                    (nextPayment?.days_left ?? 0) <= 0 ? "text-red-600" : ""
+                  }
+                  subText={
+                    nextPayment && (
+                      <span
+                        className={`block text-[10px] font-medium mt-1 ${
+                          // Fix 2: Default to 0 for the comparison
+                          (nextPayment.days_left ?? 0) < 0
+                            ? "text-red-500"
+                            : "text-[#171512]/40"
+                        }`}
+                      >
+                        {/* Fix 3: Logic using the defaulted value */}
+                        {(nextPayment.days_left ?? 0) > 0
+                          ? `${nextPayment.days_left} Days remaining`
+                          : (nextPayment.days_left ?? 0) === 0
+                            ? "Due Today"
+                            : `Overdue by ${Math.abs(nextPayment.days_left ?? 0)} days`}
+                      </span>
+                    )
+                  }
                 />
 
                 {isAgric && (
                   <StatCard
                     label="Projected ROI"
                     value={`${investment.roi}%`}
-                    subText={<span className="text-xs text-[#171512]/30 font-medium">p.a.</span>}
+                    subText={
+                      <span className="text-xs text-[#171512]/30 font-medium">
+                        p.a.
+                      </span>
+                    }
                   />
                 )}
               </div>
@@ -358,14 +400,15 @@ const InvestmentDetail = ({ id, onBack }: DetailProps) => {
 
         {/* Bottom Section: Payment Schedule & Docs */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
           {/* Payment Schedule */}
           <div className="lg:col-span-2 space-y-6">
             <div className="flex items-center gap-3">
               <div className="bg-[#171512] p-2 rounded-lg text-white">
                 <CalendarClock className="w-5 h-5" />
               </div>
-              <h4 className="text-lg font-black uppercase tracking-tight">Payment Schedule</h4>
+              <h4 className="text-lg font-black uppercase tracking-tight">
+                Payment Schedule
+              </h4>
             </div>
 
             <div className="bg-white rounded-2xl border border-[#171512]/5 shadow-sm overflow-hidden">
@@ -385,7 +428,10 @@ const InvestmentDetail = ({ id, onBack }: DetailProps) => {
                     ))}
                     {!investment.schedules?.length && (
                       <tr>
-                        <td colSpan={4} className="px-6 py-8 text-center text-sm text-[#171512]/40">
+                        <td
+                          colSpan={4}
+                          className="px-6 py-8 text-center text-sm text-[#171512]/40"
+                        >
                           No payment schedule available.
                         </td>
                       </tr>
@@ -402,37 +448,46 @@ const InvestmentDetail = ({ id, onBack }: DetailProps) => {
               <div className="bg-[#d0a539] p-2 rounded-lg text-[#171512]">
                 <FileText className="w-5 h-5" />
               </div>
-              <h4 className="text-lg font-black uppercase tracking-tight">Documents</h4>
+              <h4 className="text-lg font-black uppercase tracking-tight">
+                Documents
+              </h4>
             </div>
 
             <div className="bg-white p-6 rounded-2xl border border-[#171512]/5 shadow-sm space-y-4">
-               {/* Doc Items */}
-               <div className="flex items-center gap-4 p-4 rounded-xl bg-[#f8f7f6] border border-[#171512]/5 hover:border-[#d0a539]/30 transition-colors cursor-pointer group">
-                  <div className="bg-white p-2 rounded-lg shadow-sm group-hover:scale-110 transition-transform">
-                     <FileText className="w-5 h-5 text-[#d0a539]" />
-                  </div>
-                  <div>
-                     <p className="text-xs font-bold text-[#171512]">Allocation Letter</p>
-                     <p className="text-[10px] text-[#171512]/40 uppercase tracking-widest mt-0.5">PDF • 1.2MB</p>
-                  </div>
-               </div>
-               
-               <div className="flex items-center gap-4 p-4 rounded-xl bg-[#f8f7f6] border border-[#171512]/5 hover:border-[#d0a539]/30 transition-colors cursor-pointer group">
-                  <div className="bg-white p-2 rounded-lg shadow-sm group-hover:scale-110 transition-transform">
-                     <FileText className="w-5 h-5 text-[#d0a539]" />
-                  </div>
-                  <div>
-                     <p className="text-xs font-bold text-[#171512]">Payment Receipt</p>
-                     <p className="text-[10px] text-[#171512]/40 uppercase tracking-widest mt-0.5">PDF • 450KB</p>
-                  </div>
-               </div>
+              {/* Doc Items */}
+              <div className="flex items-center gap-4 p-4 rounded-xl bg-[#f8f7f6] border border-[#171512]/5 hover:border-[#d0a539]/30 transition-colors cursor-pointer group">
+                <div className="bg-white p-2 rounded-lg shadow-sm group-hover:scale-110 transition-transform">
+                  <FileText className="w-5 h-5 text-[#d0a539]" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-[#171512]">
+                    Allocation Letter
+                  </p>
+                  <p className="text-[10px] text-[#171512]/40 uppercase tracking-widest mt-0.5">
+                    PDF • 1.2MB
+                  </p>
+                </div>
+              </div>
 
-               <button className="w-full py-3 text-[10px] font-black uppercase tracking-widest text-[#171512]/40 hover:text-[#d0a539] transition-colors border-t border-[#171512]/5 mt-2">
-                  View All Documents
-               </button>
+              <div className="flex items-center gap-4 p-4 rounded-xl bg-[#f8f7f6] border border-[#171512]/5 hover:border-[#d0a539]/30 transition-colors cursor-pointer group">
+                <div className="bg-white p-2 rounded-lg shadow-sm group-hover:scale-110 transition-transform">
+                  <FileText className="w-5 h-5 text-[#d0a539]" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-[#171512]">
+                    Payment Receipt
+                  </p>
+                  <p className="text-[10px] text-[#171512]/40 uppercase tracking-widest mt-0.5">
+                    PDF • 450KB
+                  </p>
+                </div>
+              </div>
+
+              <button className="w-full py-3 text-[10px] font-black uppercase tracking-widest text-[#171512]/40 hover:text-[#d0a539] transition-colors border-t border-[#171512]/5 mt-2">
+                View All Documents
+              </button>
             </div>
           </div>
-
         </div>
       </div>
     </main>
